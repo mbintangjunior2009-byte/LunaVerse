@@ -6,31 +6,27 @@ import { Button } from '@/Components/ui/Button';
 import { Flame, Target, Trophy, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getAllLanguages } from '@/data/languageConfig';
-import { loadLanguageProgress } from '@/lib/languageProgress';
-import { getTotalLessonCount } from '@/data/languageCurriculum';
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth, backendProgress, languageProgresses }) {
     const languages = getAllLanguages();
     
-    // Calculate progress for each language
+    // Calculate progress for each language using backend data
     const languagesWithProgress = languages.map((lang) => {
-        const progress = loadLanguageProgress(lang.id);
-        const totalLessons = getTotalLessonCount(lang.id);
-        const completedLessons = progress.completed.length;
-        const progressPercent = totalLessons > 0 
-            ? Math.round((completedLessons / totalLessons) * 100) 
-            : 0;
+        // Get language-specific progress from backend if available
+        const langProgress = languageProgresses?.[lang.id] || { xp: 0, completed_lessons: 0, completion_percentage: 0 };
+        
+        const progressPercent = langProgress.completion_percentage || 0;
         
         // Calculate level based on progress
         const levelIndex = Math.floor(progressPercent / 33.33);
         const levels = ['Beginner', 'Intermediate', 'Advanced'];
-        const currentLevel = levels[Math.min(levelIndex, 2)];
+        const currentLevel = progressPercent > 0 ? levels[Math.min(levelIndex, 2)] : 'Not started';
         
         return {
             ...lang,
             progress: progressPercent,
-            xp: progress.xp || 0,
-            level: progressPercent > 0 ? currentLevel : 'Not started',
+            xp: langProgress.xp || 0,
+            level: currentLevel,
         };
     });
 
@@ -39,9 +35,9 @@ export default function Dashboard({ auth }) {
     const primaryLanguage = activeLanguages[0] || languagesWithProgress[0];
 
     const stats = [
-        { label: "Today's XP", value: "150", icon: Trophy, color: "text-brand-300", bg: "bg-brand-500/10" },
-        { label: "Weekly Streak", value: "14 Days", icon: Flame, color: "text-orange-400", bg: "bg-orange-400/10" },
-        { label: "Daily Goal", value: "3/5 Lessons", icon: Target, color: "text-blue-400", bg: "bg-blue-400/10" },
+        { label: "Total XP", value: backendProgress?.xp || 0, icon: Trophy, color: "text-brand-300", bg: "bg-brand-500/10" },
+        { label: "Weekly Streak", value: `${backendProgress?.streak || 0} Days`, icon: Flame, color: "text-orange-400", bg: "bg-orange-400/10" },
+        { label: "Completed", value: `${backendProgress?.completed_lessons || 0} Lessons`, icon: Target, color: "text-blue-400", bg: "bg-blue-400/10" },
     ];
 
     return (
@@ -62,7 +58,12 @@ export default function Dashboard({ auth }) {
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
                 <div className="relative z-10">
                     <h1 className="text-3xl font-bold mb-2">Welcome back, {auth.user.name}! 👋</h1>
-                    <p className="text-gray-300 mb-4 max-w-lg">You're doing great. You've maintained a 14-day streak. Keep up the momentum!</p>
+                    <p className="text-gray-300 mb-4 max-w-lg">
+                        {backendProgress?.streak > 0 
+                            ? `You're doing great! You've maintained a ${backendProgress.streak}-day streak. Keep up the momentum!`
+                            : "Start your learning journey today! Complete your first lesson to begin tracking your progress."
+                        }
+                    </p>
                     <Link href={`/language/${primaryLanguage.id}`}>
                         <Button variant="primary" className="gap-2">
                             <Play className="w-4 h-4" /> Continue {primaryLanguage.name}

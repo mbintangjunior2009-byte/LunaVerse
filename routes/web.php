@@ -32,13 +32,12 @@ Route::get('/community', function () {
 })->name('community');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/practice', function () {
-        return Inertia::render('Dashboard/Practice');
-    })->name('practice');
+    // Practice routes with unlock progression
+    Route::get('/practice', [\App\Http\Controllers\PracticeController::class, 'index'])->name('practice');
+    Route::post('/practice/submit', [\App\Http\Controllers\PracticeController::class, 'submit'])->name('practice.submit');
+    Route::get('/api/practice/questions', [\App\Http\Controllers\PracticeController::class, 'getQuestions'])->name('api.practice.questions');
 
     Route::get('/vocabulary', function () {
         return Inertia::render('Dashboard/Vocabulary');
@@ -101,41 +100,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]);
         })->name('language.practice');
 
-        // Hiragana quiz routes - must be defined BEFORE the generic {quiz} route
-        Route::get('/basic-hiragana-quiz', function (string $lang) use ($allowedLanguages) {
+        // Hiragana quiz route - must be defined BEFORE the generic {quiz} route
+        Route::get('/practice/hiragana', function (string $lang) use ($allowedLanguages) {
             $slug = strtolower($lang);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/BasicHiraganaQuiz', [
+            return Inertia::render('Language/HiraganaQuiz', [
                 'languageId' => $slug,
+                'quizId' => 'basic-hiragana',
             ]);
-        })->name('language.basic-hiragana-quiz');
-
-        Route::get('/dakuten-quiz', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
-            abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/BasicHiraganaQuiz', [
-                'languageId' => $slug,
-                'quizType' => 'dakuten',
-            ]);
-        })->name('language.dakuten-quiz');
-
-        Route::get('/handakuten-quiz', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
-            abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/BasicHiraganaQuiz', [
-                'languageId' => $slug,
-                'quizType' => 'handakuten',
-            ]);
-        })->name('language.handakuten-quiz');
-
-        Route::get('/mixed-hiragana-quiz', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
-            abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/BasicHiraganaQuiz', [
-                'languageId' => $slug,
-                'quizType' => 'mixed',
-            ]);
-        })->name('language.mixed-hiragana-quiz');
+        })->name('language.hiragana');
 
         // Generic quiz route for other quizzes
         Route::get('/practice/{quiz}', function (string $lang, string $quiz) use ($allowedLanguages) {

@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { InteractiveCard } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
-import { BookOpen, MessageSquare, Mic, Headphones } from 'lucide-react';
+import { BookOpen, MessageSquare, Mic, Headphones, ArrowRight } from 'lucide-react';
 import { getAllLanguages } from '@/data/languageConfig';
 
 const modes = [
@@ -31,6 +31,26 @@ export default function Practice() {
             <div className="mb-8">
                 <h1 className="text-3xl font-bold">Practice</h1>
                 <p className="text-gray-400 mt-2">Sharpen your skills with focused practice sessions.</p>
+            </div>
+
+            {/* Quick link to the new Practice Index with unlock progression */}
+            <div className="mb-8">
+                <InteractiveCard className="p-6 border-brand-500/30 bg-gradient-to-r from-brand-900/30 to-brand-700/30">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-xl font-bold mb-2">Japanese Practice Progression</h2>
+                            <p className="text-sm text-gray-400 mb-4">
+                                Complete Hiragana to unlock Katakana, then progress through Kanji, Vocabulary, Grammar, and Listening.
+                            </p>
+                            <Link href="/practice">
+                                <Button variant="primary" className="gap-2">
+                                    Start Practice <ArrowRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className="text-6xl opacity-50">あ</div>
+                    </div>
+                </InteractiveCard>
             </div>
 
             <div className="mb-8">

@@ -235,12 +235,48 @@ export const languageConfig = {
             },
         ],
         studyCategories: [
-            { id: 'pinyin', name: 'Pinyin', icon: 'a', description: 'Romanization and tones' },
-            { id: 'vocabulary', name: 'Vocabulary', icon: '📚', description: 'Essential words and phrases' },
-            { id: 'grammar', name: 'Grammar', icon: '📝', description: 'Sentence structure' },
-            { id: 'hanzi', name: 'Hanzi', icon: '漢', description: 'Chinese characters' },
-            { id: 'reading', name: 'Reading', icon: '📖', description: 'Comprehension practice' },
-            { id: 'listening', name: 'Listening', icon: '🎧', description: 'Audio comprehension' },
+            { 
+                id: 'pinyin', 
+                name: 'Pinyin', 
+                icon: 'a', 
+                description: 'Romanization and tones',
+                lessons: [
+                    { id: 'pinyin-basics', title: 'Pinyin Basics', difficulty: 'Beginner', time: '40 min' },
+                    { id: 'basic-tones', title: 'Basic Tones', difficulty: 'Beginner', time: '35 min' },
+                    { id: 'numbers', title: 'Numbers', difficulty: 'Beginner', time: '30 min' },
+                ]
+            },
+            { 
+                id: 'vocabulary', 
+                name: 'Vocabulary', 
+                icon: '📚', 
+                description: 'Essential words and phrases',
+                lessons: [
+                    { id: 'greetings', title: 'Greetings', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'family', title: 'Family', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'food', title: 'Food', difficulty: 'Beginner', time: '35 min' },
+                ]
+            },
+            { 
+                id: 'grammar', 
+                name: 'Grammar', 
+                icon: '📝', 
+                description: 'Sentence structure',
+                lessons: [
+                    { id: 'basic-sentence-structure', title: 'Basic Sentence Structure', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'questions', title: 'Questions', difficulty: 'Beginner', time: '25 min' },
+                ]
+            },
+            { 
+                id: 'hanzi', 
+                name: 'Hanzi', 
+                icon: '漢', 
+                description: 'Chinese characters',
+                lessons: [
+                    { id: 'basic-characters', title: 'Basic Characters', difficulty: 'Beginner', time: '40 min' },
+                    { id: 'stroke-order', title: 'Stroke Order', difficulty: 'Beginner', time: '30 min' },
+                ]
+            },
         ],
         practiceCategories: [
             { id: 'vocabulary-quiz', name: 'Vocabulary Quiz', icon: '🔤', description: 'Test your word knowledge' },
@@ -295,12 +331,38 @@ export const languageConfig = {
             },
         ],
         studyCategories: [
-            { id: 'hangul', name: 'Hangul', icon: '가', description: 'Korean alphabet' },
-            { id: 'vocabulary', name: 'Vocabulary', icon: '📚', description: 'Essential words and phrases' },
-            { id: 'grammar', name: 'Grammar', icon: '📝', description: 'Sentence structure' },
-            { id: 'honorifics', name: 'Honorifics', icon: '🙏', description: 'Politeness levels' },
-            { id: 'reading', name: 'Reading', icon: '📖', description: 'Comprehension practice' },
-            { id: 'listening', name: 'Listening', icon: '🎧', description: 'Audio comprehension' },
+            { 
+                id: 'hangul', 
+                name: 'Hangul', 
+                icon: '가', 
+                description: 'Korean alphabet',
+                lessons: [
+                    { id: 'hangul-basics', title: 'Hangul Basics', difficulty: 'Beginner', time: '40 min' },
+                    { id: 'double-consonants', title: 'Double Consonants', difficulty: 'Beginner', time: '35 min' },
+                    { id: 'batchim', title: 'Batchim', difficulty: 'Beginner', time: '45 min' },
+                ]
+            },
+            { 
+                id: 'vocabulary', 
+                name: 'Vocabulary', 
+                icon: '📚', 
+                description: 'Essential words and phrases',
+                lessons: [
+                    { id: 'korean-greetings', title: 'Greetings', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'numbers', title: 'Numbers', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'family', title: 'Family', difficulty: 'Beginner', time: '30 min' },
+                ]
+            },
+            { 
+                id: 'grammar', 
+                name: 'Grammar', 
+                icon: '�', 
+                description: 'Sentence structure',
+                lessons: [
+                    { id: 'basic-sentence-structure', title: 'Basic Sentence Structure', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'particles', title: 'Particles', difficulty: 'Beginner', time: '25 min' },
+                ]
+            },
         ],
         practiceCategories: [
             { id: 'vocabulary-quiz', name: 'Vocabulary Quiz', icon: '🔤', description: 'Test your word knowledge' },
@@ -355,12 +417,36 @@ export const languageConfig = {
             },
         ],
         studyCategories: [
-            { id: 'grammar', name: 'Grammar', icon: '📝', description: 'Sentence structure and rules' },
-            { id: 'vocabulary', name: 'Vocabulary', icon: '📚', description: 'Essential words and phrases' },
-            { id: 'pronunciation', name: 'Pronunciation', icon: '🗣️', description: 'Speaking and sounds' },
-            { id: 'idioms', name: 'Idioms', icon: '💬', description: 'Common expressions' },
-            { id: 'reading', name: 'Reading', icon: '📖', description: 'Comprehension practice' },
-            { id: 'listening', name: 'Listening', icon: '🎧', description: 'Audio comprehension' },
+            { 
+                id: 'alphabet', 
+                name: 'Alphabet', 
+                icon: 'A', 
+                description: 'English alphabet',
+                lessons: [
+                    { id: 'alphabet', title: 'The Alphabet', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'pronunciation', title: 'Basic Pronunciation', difficulty: 'Beginner', time: '35 min' },
+                ]
+            },
+            { 
+                id: 'vocabulary', 
+                name: 'Vocabulary', 
+                icon: '📚', 
+                description: 'Essential words and phrases',
+                lessons: [
+                    { id: 'english-greetings', title: 'Greetings', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'common-words', title: 'Common Words', difficulty: 'Beginner', time: '30 min' },
+                ]
+            },
+            { 
+                id: 'grammar', 
+                name: 'Grammar', 
+                icon: '�', 
+                description: 'Sentence structure and rules',
+                lessons: [
+                    { id: 'basic-grammar', title: 'Basic Grammar', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'sentence-structure', title: 'Sentence Structure', difficulty: 'Beginner', time: '25 min' },
+                ]
+            },
         ],
         practiceCategories: [
             { id: 'vocabulary-quiz', name: 'Vocabulary Quiz', icon: '🔤', description: 'Test your word knowledge' },
@@ -415,12 +501,36 @@ export const languageConfig = {
             },
         ],
         studyCategories: [
-            { id: 'grammar', name: 'Grammar', icon: '📝', description: 'Sentence structure and rules' },
-            { id: 'vocabulary', name: 'Vocabulary', icon: '📚', description: 'Essential words and phrases' },
-            { id: 'pronunciation', name: 'Pronunciation', icon: '🗣️', description: 'Speaking and sounds' },
-            { id: 'conjugation', name: 'Conjugation', icon: '🔄', description: 'Verb tenses' },
-            { id: 'reading', name: 'Reading', icon: '📖', description: 'Comprehension practice' },
-            { id: 'listening', name: 'Listening', icon: '🎧', description: 'Audio comprehension' },
+            { 
+                id: 'alphabet', 
+                name: 'Alphabet', 
+                icon: 'A', 
+                description: 'Spanish alphabet',
+                lessons: [
+                    { id: 'spanish-alphabet', title: 'The Alphabet', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'spanish-pronunciation', title: 'Basic Pronunciation', difficulty: 'Beginner', time: '35 min' },
+                ]
+            },
+            { 
+                id: 'vocabulary', 
+                name: 'Vocabulary', 
+                icon: '📚', 
+                description: 'Essential words and phrases',
+                lessons: [
+                    { id: 'spanish-greetings', title: 'Greetings', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'common-words', title: 'Common Words', difficulty: 'Beginner', time: '30 min' },
+                ]
+            },
+            { 
+                id: 'grammar', 
+                name: 'Grammar', 
+                icon: '�', 
+                description: 'Sentence structure and rules',
+                lessons: [
+                    { id: 'basic-grammar', title: 'Basic Grammar', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'conjugation', title: 'Conjugation', difficulty: 'Beginner', time: '35 min' },
+                ]
+            },
         ],
         practiceCategories: [
             { id: 'vocabulary-quiz', name: 'Vocabulary Quiz', icon: '🔤', description: 'Test your word knowledge' },

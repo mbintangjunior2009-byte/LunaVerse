@@ -3,6 +3,8 @@
  * Generic progress tracking for all languages
  */
 
+import { getTotalLessonCount as getTotalLessonCountFromCurriculum } from '@/data/languageCurriculum';
+
 const STORAGE_KEY_PREFIX = 'linguanova.';
 
 /**
@@ -123,3 +125,12 @@ export function resetLanguageProgress(languageId) {
         }
     });
 }
+
+/**
+ * Get total lesson count for a specific language
+ * Delegates to the curriculum system
+ */
+export function getTotalLessonCount(languageId) {
+    return getTotalLessonCountFromCurriculum(languageId);
+}
+    

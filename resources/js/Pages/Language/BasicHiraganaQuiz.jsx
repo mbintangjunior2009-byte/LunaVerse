@@ -12,7 +12,6 @@ import { motion, AnimatePresence } from 'framer-motion';
  * Supports: basic-hiragana, dakuten, handakuten, mixed
  */
 export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standalone = true, onBack }) {
-    console.log('BasicHiraganaQuiz rendered with quizType:', quizType, 'standalone:', standalone);
     const [quizState, setQuizState] = useState('intro'); // intro, quiz, result
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -79,9 +78,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
     const isPerfect = score === 100;
 
     const startQuiz = useCallback(() => {
-        console.log('startQuiz called with quizType:', quizType);
         const randomQuestions = getRandomHiraganaQuestions(quizType, 10);
-        console.log('Questions loaded:', randomQuestions.length, randomQuestions);
         setQuestions(randomQuestions);
         setCurrentQuestionIndex(0);
         setAnswers([]);

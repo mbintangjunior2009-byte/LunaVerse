@@ -4,7 +4,7 @@ import { Lock } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Card } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
-import { getLanguageConfig } from '@/data/languageConfig';
+import { getLanguageConfig, getLanguageConfig as getConfig } from '@/data/languageConfig';
 import { getLessonById, getAdjacentLessons, isLessonUnlocked, getLanguageCurriculum } from '@/data/languageCurriculum';
 import { loadLanguageProgress, markLessonComplete, setLastLesson, setLessonPartialProgress } from '@/lib/languageProgress';
 import { buildLessonViewerContent } from '@/lib/lessonViewer';
@@ -33,6 +33,18 @@ export default function LanguageLesson({ languageId, lessonId }) {
     const { previous, next } = getAdjacentLessons(languageId, lessonId);
     const content = useMemo(() => lesson ? buildLessonViewerContent(lesson) : null, [lesson]);
     const curriculum = getLanguageCurriculum(languageId);
+
+    // Check if lesson exists in studyCategories (even if not in curriculum)
+    const lessonInStudyCategories = useMemo(() => {
+        const langConfig = getConfig(languageId);
+        if (!langConfig?.studyCategories) return false;
+        for (const category of langConfig.studyCategories) {
+            if (category.lessons?.some(l => l.id === lessonId)) {
+                return true;
+            }
+        }
+        return false;
+    }, [languageId, lessonId]);
 
     const [progressState, setProgressState] = useState({ completed: [], lastLessonId: null, xp: 0 });
     const [lessonProgress, setLessonProgress] = useState(0);
@@ -89,6 +101,24 @@ export default function LanguageLesson({ languageId, lessonId }) {
     };
 
     if (!lesson || !content) {
+        // If lesson exists in studyCategories but not in curriculum, show "content being prepared"
+        if (lessonInStudyCategories) {
+            return (
+                <DashboardLayout>
+                    <Head title="Lesson Content Being Prepared" />
+                    <LanguageHeader languageId={languageId} currentSection="study" />
+                    <Card className="p-8 text-center">
+                        <h1 className="text-2xl font-bold mb-2">Lesson content is being prepared</h1>
+                        <p className="text-gray-400 mb-6">This lesson is part of the {config.name} curriculum, but detailed content is still being developed.</p>
+                        <Button variant="primary" onClick={() => router.visit(`/language/${languageId}/study`)}>
+                            Back to Study
+                        </Button>
+                    </Card>
+                </DashboardLayout>
+            );
+        }
+
+        // Lesson doesn't exist anywhere - show "Lesson not found"
         return (
             <DashboardLayout>
                 <Head title="Lesson not found" />

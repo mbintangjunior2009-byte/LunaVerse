@@ -227,13 +227,9 @@ export function getQuizById(languageId, category, mode, quizId) {
  * Get random questions for a Hiragana quiz type
  */
 export function getRandomHiraganaQuestions(quizType = 'basic-hiragana', count = 10) {
-    console.log('getRandomHiraganaQuestions called with quizType:', quizType, 'count:', count);
     const allQuestions = quizData.japanese?.hiragana?.[quizType]?.modes?.reading?.questions || [];
-    console.log('Available questions for', quizType, ':', allQuestions.length);
     const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-    const result = shuffled.slice(0, Math.min(count, shuffled.length));
-    console.log('Returning', result.length, 'questions');
-    return result;
+    return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 
 /** @deprecated Use getRandomHiraganaQuestions */

@@ -43,6 +43,25 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->progress()->create([
+            'xp' => 0,
+            'level' => 1,
+            'streak' => 0,
+            'completed_lessons' => 0,
+        ]);
+
+        // Initialize practice progress with Hiragana unlocked by default
+        $categories = ['hiragana', 'katakana', 'kanji', 'vocabulary', 'grammar', 'listening'];
+        foreach ($categories as $category) {
+            $user->practiceProgress()->create([
+                'category' => $category,
+                'is_unlocked' => $category === 'hiragana', // Only Hiragana is unlocked by default
+                'is_completed' => false,
+                'best_score' => 0,
+                'attempts' => 0,
+            ]);
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
