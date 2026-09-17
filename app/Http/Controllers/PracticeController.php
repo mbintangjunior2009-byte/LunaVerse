@@ -113,10 +113,10 @@ class PracticeController extends Controller
     /**
      * Get practice page with category unlock status.
      */
-    public function index()
+    public function index(string $language = 'japanese')
     {
         $user = Auth::user();
-        
+
         // Get all practice progress for the user
         $practiceProgress = $user->practiceProgress()->get()->keyBy('category');
 
@@ -198,6 +198,7 @@ class PracticeController extends Controller
 
         return Inertia::render('Practice/Index', [
             'categories' => $categories,
+            'language'   => $language,
         ]);
     }
 }

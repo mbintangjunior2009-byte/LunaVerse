@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
-import { ArrowLeft, BookOpen, TrendingUp, Trophy, Flame } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, TrendingUp, Trophy, Brain, LayoutDashboard } from 'lucide-react';
 import { getLanguageConfig } from '@/data/languageConfig';
 
 /**
@@ -9,24 +9,28 @@ import { getLanguageConfig } from '@/data/languageConfig';
  */
 export default function LanguageHeader({ languageId, currentSection = 'hub' }) {
     const config = getLanguageConfig(languageId);
-    
+    const { url } = usePage();
+    // Strip query string for comparison
+    const currentPath = url.split('?')[0];
+
     const sections = [
-        { id: 'hub', label: 'Hub', icon: BookOpen, href: `/language/${languageId}` },
-        { id: 'study', label: 'Study', icon: BookOpen, href: `/language/${languageId}/study` },
-        { id: 'practice', label: 'Practice', icon: TrendingUp, href: `/language/${languageId}/practice` },
-        { id: 'progress', label: 'Progress', icon: TrendingUp, href: `/language/${languageId}/progress` },
-        { id: 'achievements', label: 'Achievements', icon: Trophy, href: `/language/${languageId}/achievements` },
+        { id: 'hub',          label: 'Hub',          icon: LayoutDashboard, href: `/languages/${languageId}` },
+        { id: 'study',        label: 'Study',        icon: BookOpen,        href: `/languages/${languageId}/study` },
+        { id: 'practice',     label: 'Practice',     icon: TrendingUp,      href: `/languages/${languageId}/practice` },
+        { id: 'vocabulary',   label: 'Vocabulary',   icon: Brain,           href: `/languages/${languageId}/vocabulary` },
+        { id: 'progress',     label: 'Progress',     icon: TrendingUp,      href: `/languages/${languageId}/progress` },
+        { id: 'achievements', label: 'Achievements', icon: Trophy,          href: `/languages/${languageId}/achievements` },
     ];
 
     return (
         <div className="mb-8">
-            <Link 
-                href="/languages" 
+            <Link
+                href="/languages"
                 className="text-sm text-gray-400 hover:text-white transition-colors mb-2 inline-block"
             >
                 ← Back to Languages
             </Link>
-            
+
             <div className="flex items-center gap-4 mb-6">
                 <span className="text-5xl">{config.flag}</span>
                 <div>
@@ -38,8 +42,11 @@ export default function LanguageHeader({ languageId, currentSection = 'hub' }) {
             <nav className="flex flex-wrap gap-2">
                 {sections.map((section) => {
                     const Icon = section.icon;
-                    const isActive = section.id === currentSection;
-                    
+                    // Active if URL exactly matches, or is a sub-path (e.g. /practice/hiragana)
+                    const isActive =
+                        currentPath === section.href ||
+                        currentPath.startsWith(section.href + '/');
+
                     return (
                         <Link
                             key={section.id}

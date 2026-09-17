@@ -10,12 +10,12 @@ import { cn } from '@/lib/utils';
  * Reusable Study Card Component
  * Displays a study category with lesson count for any language
  */
-export default function StudyCard({ 
-    languageId, 
-    category, 
-    status = 'available', 
+export default function StudyCard({
+    languageId,
+    category,
+    status = 'available',
     progress = 0,
-    onClick 
+    onClick
 }) {
     const isLocked = status === 'locked';
     const isCompleted = status === 'completed';
@@ -115,7 +115,7 @@ export default function StudyCard({
     }
 
     return (
-        <Link href={`/language/${languageId}/study/${category.id}`} className="block h-full">
+        <Link href={`/languages/${languageId}/study/${category.id}`} className="block h-full">
             {body}
         </Link>
     );

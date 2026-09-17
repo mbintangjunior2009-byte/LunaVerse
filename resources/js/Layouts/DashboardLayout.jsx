@@ -22,11 +22,11 @@ const searchCatalog = [
     ...navItems.map((item) => ({ label: item.name, href: item.href, type: 'Page' })),
     { label: 'Settings', href: '/settings', type: 'Page' },
     { label: 'Profile', href: '/profile', type: 'Page' },
-    { label: 'Japanese', href: '/language/japanese', type: 'Language' },
-    { label: 'Chinese', href: '/language/chinese', type: 'Language' },
-    { label: 'Korean', href: '/language/korean', type: 'Language' },
-    { label: 'English', href: '/language/english', type: 'Language' },
-    { label: 'Spanish', href: '/language/spanish', type: 'Language' },
+    { label: 'Japanese', href: '/languages/japanese', type: 'Language' },
+    { label: 'Chinese', href: '/languages/chinese', type: 'Language' },
+    { label: 'Korean', href: '/languages/korean', type: 'Language' },
+    { label: 'English', href: '/languages/english', type: 'Language' },
+    { label: 'Spanish', href: '/languages/spanish', type: 'Language' },
 ];
 
 const notifications = [
@@ -43,7 +43,7 @@ function isActivePath(currentUrl, href) {
         return path === hrefPath;
     }
     if (hrefPath === '/languages') {
-        return path === hrefPath || path.startsWith('/language/');
+        return path === hrefPath || path.startsWith('/languages/');
     }
     return path === hrefPath || path.startsWith(`${hrefPath}/`);
 }

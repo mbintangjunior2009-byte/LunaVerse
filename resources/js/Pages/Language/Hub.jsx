@@ -19,7 +19,7 @@ export default function LanguageHub({ languageId }) {
     const config = getLanguageConfig(languageId);
     const curriculum = getLanguageCurriculum(languageId);
     const progress = loadLanguageProgress(languageId);
-    
+
     const totalLessons = curriculum.reduce((acc, cat) => acc + cat.lessons.length, 0);
     const completedLessons = progress.completed.length;
     const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
@@ -34,13 +34,13 @@ export default function LanguageHub({ languageId }) {
     return (
         <DashboardLayout>
             <Head title={`${config.name} - Hub`} />
-            
+
             <LanguageHeader languageId={languageId} currentSection="hub" />
 
             {/* Language Banner */}
-            <div 
+            <div
                 className="relative rounded-2xl p-8 mb-8 overflow-hidden"
-                style={{ 
+                style={{
                     background: `linear-gradient(135deg, ${config.themeColor}22 0%, ${config.themeColor}11 100%)`,
                     border: `1px solid ${config.themeColor}33`
                 }}
@@ -76,7 +76,7 @@ export default function LanguageHub({ languageId }) {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <Link href={`/language/${languageId}/study`}>
+                <Link href={`/languages/${languageId}/study`}>
                     <Card className="p-5 hover:border-brand-500/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-xl bg-brand-500/20 flex items-center justify-center">
@@ -87,8 +87,8 @@ export default function LanguageHub({ languageId }) {
                         <p className="text-sm text-gray-400">Continue learning</p>
                     </Card>
                 </Link>
-                
-                <Link href={`/language/${languageId}/practice`}>
+
+                <Link href={`/languages/${languageId}/practice`}>
                     <Card className="p-5 hover:border-brand-500/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
@@ -99,8 +99,8 @@ export default function LanguageHub({ languageId }) {
                         <p className="text-sm text-gray-400">Test your skills</p>
                     </Card>
                 </Link>
-                
-                <Link href={`/language/${languageId}/progress`}>
+
+                <Link href={`/languages/${languageId}/progress`}>
                     <Card className="p-5 hover:border-brand-500/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
@@ -111,8 +111,8 @@ export default function LanguageHub({ languageId }) {
                         <p className="text-sm text-gray-400">View statistics</p>
                     </Card>
                 </Link>
-                
-                <Link href={`/language/${languageId}/achievements`}>
+
+                <Link href={`/languages/${languageId}/achievements`}>
                     <Card className="p-5 hover:border-brand-500/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
@@ -135,28 +135,28 @@ export default function LanguageHub({ languageId }) {
                     <div className="mt-2 w-full h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
                             className="h-full rounded-full transition-all duration-300"
-                            style={{ 
+                            style={{
                                 width: `${overallProgress}%`,
-                                backgroundColor: config.themeColor 
+                                backgroundColor: config.themeColor
                             }}
                         />
                     </div>
                 </Card>
-                
+
                 <Card className="p-5">
                     <p className="text-sm text-gray-400 mb-1 inline-flex items-center gap-1">
                         <Play className="w-3.5 h-3.5 text-brand-300" /> Lessons Completed
                     </p>
                     <p className="text-3xl font-bold">{completedLessons}<span className="text-lg text-gray-500">/{totalLessons}</span></p>
                 </Card>
-                
+
                 <Card className="p-5">
                     <p className="text-sm text-gray-400 mb-1 inline-flex items-center gap-1">
                         <Flame className="w-3.5 h-3.5 text-orange-300" /> Total XP
                     </p>
                     <p className="text-3xl font-bold text-brand-300">{progress.xp.toLocaleString()}</p>
                 </Card>
-                
+
                 <Card className="p-5">
                     <p className="text-sm text-gray-400 mb-1 inline-flex items-center gap-1">
                         <TrendingUp className="w-3.5 h-3.5 text-emerald-300" /> Current Streak

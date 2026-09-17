@@ -13,7 +13,7 @@ export default function CalendarPage() {
     const primaryLanguage = languages[0]; // Default to first language (Japanese)
 
     const upcoming = [
-        { title: `${primaryLanguage.name} Grammar Review`, when: 'Today · 7:00 PM', href: `/language/${primaryLanguage.id}/study` },
+        { title: `${primaryLanguage.name} Grammar Review`, when: 'Today · 7:00 PM', href: `/languages/${primaryLanguage.id}/study` },
         { title: 'Vocabulary Drill', when: 'Tomorrow · 6:30 PM', href: '/vocabulary' },
         { title: 'Practice Session', when: 'Friday · 8:00 PM', href: '/practice' },
     ];

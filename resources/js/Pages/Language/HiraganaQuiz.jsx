@@ -13,9 +13,9 @@ export default function HiraganaQuiz({ languageId, quizId }) {
         <DashboardLayout>
             <Head title="Hiragana Quiz" />
             <LanguageHeader languageId={languageId} currentSection="practice" />
-            
+
             <div className="mb-6">
-                <Link href={`/language/${languageId}/practice`} className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
+                <Link href={`/languages/${languageId}/practice`} className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
                     Back to Practice
                 </Link>
             </div>

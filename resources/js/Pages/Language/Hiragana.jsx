@@ -21,7 +21,7 @@ export default function Hiragana() {
             questions: 46,
             xpReward: 100,
             difficulty: 'Beginner',
-            href: '/language/japanese/basic-hiragana-quiz'
+            href: '/languages/japanese/basic-hiragana-quiz'
         },
         {
             id: 'dakuten',
@@ -62,7 +62,7 @@ export default function Hiragana() {
             <LanguageHeader languageId="japanese" currentSection="practice" />
 
             <div className="mb-6">
-                <Link href="/language/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
+                <Link href="/languages/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
                     <ArrowLeft className="w-4 h-4" />
                     Back to Practice
                 </Link>

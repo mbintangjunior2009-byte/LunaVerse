@@ -10,21 +10,21 @@ import { getTotalLessonCount } from '@/data/languageCurriculum';
 
 export default function Languages() {
     const languages = getAllLanguages();
-    
+
     // Calculate progress for each language
     const languagesWithProgress = languages.map((lang) => {
         const progress = loadLanguageProgress(lang.id);
         const totalLessons = getTotalLessonCount(lang.id);
         const completedLessons = progress.completed.length;
-        const progressPercent = totalLessons > 0 
-            ? Math.round((completedLessons / totalLessons) * 100) 
+        const progressPercent = totalLessons > 0
+            ? Math.round((completedLessons / totalLessons) * 100)
             : 0;
-        
+
         // Calculate estimated level based on progress
         const levelIndex = Math.floor(progressPercent / 33.33);
         const levels = ['Beginner', 'Intermediate', 'Advanced'];
         const estimatedLevel = progressPercent > 0 ? levels[Math.min(levelIndex, 2)] : 'Not started';
-        
+
         return {
             ...lang,
             level: estimatedLevel,
@@ -52,18 +52,18 @@ export default function Languages() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {languagesWithProgress.map((lang) => (
-                    <Link key={lang.id} href={`/language/${lang.id}`}>
+                    <Link key={lang.id} href={`/languages/${lang.id}`}>
                         <InteractiveCard className="h-full">
                             <div className="relative overflow-hidden">
                                 {/* Premium glass effect background */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-10"
-                                    style={{ 
+                                    style={{
                                         background: `linear-gradient(135deg, ${lang.themeColor} 0%, transparent 50%)`,
                                         filter: 'blur(20px)'
                                     }}
                                 />
-                                
+
                                 <div className="relative z-10">
                                     {/* Header */}
                                     <div className="flex items-center justify-between mb-6">
@@ -101,22 +101,22 @@ export default function Languages() {
                                             <span className="font-bold">{lang.progress}%</span>
                                         </div>
                                         <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                                            <div 
-                                                className="h-full rounded-full transition-all duration-300 shadow-lg" 
-                                                style={{ 
+                                            <div
+                                                className="h-full rounded-full transition-all duration-300 shadow-lg"
+                                                style={{
                                                     width: `${lang.progress}%`,
                                                     backgroundColor: lang.themeColor,
                                                     boxShadow: `0 0 20px ${lang.themeColor}40`
-                                                }} 
+                                                }}
                                             />
                                         </div>
                                     </div>
 
                                     {/* Action Button */}
                                     <div className="mt-6">
-                                        <Button 
-                                            variant={lang.enrolled ? "primary" : "outline"} 
-                                            size="sm" 
+                                        <Button
+                                            variant={lang.enrolled ? "primary" : "outline"}
+                                            size="sm"
                                             className="w-full gap-2"
                                         >
                                             {lang.enrolled ? (

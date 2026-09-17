@@ -57,7 +57,7 @@ export default function Practice() {
                 <h2 className="text-xl font-bold mb-4">Select a Language</h2>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {languages.map((lang) => (
-                        <Link key={lang.id} href={`/language/${lang.id}/practice`}>
+                        <Link key={lang.id} href={`/languages/${lang.id}/practice`}>
                             <InteractiveCard className="p-4 text-center hover:border-brand-500/50 transition-colors">
                                 <span className="text-3xl mb-2 block">{lang.flag}</span>
                                 <p className="font-medium text-sm">{lang.name}</p>

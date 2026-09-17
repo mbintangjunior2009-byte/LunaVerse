@@ -110,7 +110,7 @@ export default function LanguageLesson({ languageId, lessonId }) {
                     <Card className="p-8 text-center">
                         <h1 className="text-2xl font-bold mb-2">Lesson content is being prepared</h1>
                         <p className="text-gray-400 mb-6">This lesson is part of the {config.name} curriculum, but detailed content is still being developed.</p>
-                        <Button variant="primary" onClick={() => router.visit(`/language/${languageId}/study`)}>
+                        <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study`)}>
                             Back to Study
                         </Button>
                     </Card>
@@ -126,7 +126,7 @@ export default function LanguageLesson({ languageId, lessonId }) {
                 <Card className="p-8 text-center">
                     <h1 className="text-2xl font-bold mb-2">Lesson not found</h1>
                     <p className="text-gray-400 mb-6">This lesson does not exist in the {config.name} curriculum.</p>
-                    <Button variant="primary" onClick={() => router.visit(`/language/${languageId}/study`)}>
+                    <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study`)}>
                         Back to Study
                     </Button>
                 </Card>
@@ -151,11 +151,11 @@ export default function LanguageLesson({ languageId, lessonId }) {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         {previous && (
-                            <Button variant="primary" onClick={() => router.visit(`/language/${languageId}/study/${previous.id}`)}>
+                            <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study/${previous.id}`)}>
                                 Go to Previous Lesson
                             </Button>
                         )}
-                        <Button variant="outline" onClick={() => router.visit(`/language/${languageId}/study`)}>
+                        <Button variant="outline" onClick={() => router.visit(`/languages/${languageId}/study`)}>
                             Back to Study
                         </Button>
                     </div>

@@ -1,19 +1,19 @@
 import React from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Card, InteractiveCard } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
 import { Lock, Play, CheckCircle, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function PracticeIndex({ categories }) {
+export default function PracticeIndex({ categories, language = 'japanese' }) {
     const handleCategoryClick = (category) => {
         if (!category.is_unlocked) {
             return; // Don't allow clicking locked categories
         }
-        
-        // Navigate to the quiz page for this category
-        router.visit(`/language/japanese/practice/${category.id}`);
+
+        // Navigate to the unified language practice route
+        router.visit(`/languages/${language}/practice/${category.id}`);
     };
 
     const handleSubmitResults = (category, score, completed) => {
@@ -58,11 +58,10 @@ export default function PracticeIndex({ categories }) {
                             transition={{ delay: index * 0.1 }}
                         >
                             <InteractiveCard
-                                className={`h-full relative ${
-                                    !category.is_unlocked
+                                className={`h-full relative ${!category.is_unlocked
                                         ? 'opacity-60 cursor-not-allowed'
                                         : 'cursor-pointer hover:border-brand-500/50'
-                                }`}
+                                    }`}
                                 onClick={() => handleCategoryClick(category)}
                             >
                                 {/* Lock overlay for locked categories */}
@@ -138,21 +137,19 @@ export default function PracticeIndex({ categories }) {
                     {categories.map((category, index) => (
                         <React.Fragment key={category.id}>
                             <div
-                                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                                    category.is_completed
+                                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${category.is_completed
                                         ? 'bg-green-500 text-white'
                                         : category.is_unlocked
-                                        ? 'bg-brand-500 text-white'
-                                        : 'bg-gray-700 text-gray-400'
-                                }`}
+                                            ? 'bg-brand-500 text-white'
+                                            : 'bg-gray-700 text-gray-400'
+                                    }`}
                             >
                                 {category.is_completed ? '✓' : category.icon}
                             </div>
                             {index < categories.length - 1 && (
                                 <div
-                                    className={`flex-1 h-1 rounded ${
-                                        category.is_completed ? 'bg-green-500' : 'bg-gray-700'
-                                    }`}
+                                    className={`flex-1 h-1 rounded ${category.is_completed ? 'bg-green-500' : 'bg-gray-700'
+                                        }`}
                                 />
                             )}
                         </React.Fragment>

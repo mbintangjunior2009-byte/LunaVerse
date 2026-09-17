@@ -1,9 +1,19 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Button } from '@/Components/ui/Button';
 
 export default function PublicLayout({ children, auth }) {
+    const { url } = usePage();
+
+    const navLinks = [
+        { name: 'Home', href: '/' },
+        { name: 'Features', href: '/features' },
+        { name: 'Languages', href: '/languages-info' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'Community', href: '/community' },
+    ];
+
     return (
         <div className="min-h-screen bg-dark-900 text-white relative overflow-hidden font-sans">
             {/* Background Glow */}
@@ -19,11 +29,16 @@ export default function PublicLayout({ children, auth }) {
                         <span className="font-bold text-xl tracking-tight text-glow">LinguaNova</span>
                     </Link>
                     
-                    <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-                        <Link href="/#features" className="hover:text-white transition-colors">Features</Link>
-                        <Link href="/languages" className="hover:text-white transition-colors">Languages</Link>
-                        <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-                        <Link href="/community" className="hover:text-white transition-colors">Community</Link>
+                    <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+                        {navLinks.map((link) => (
+                            <Link 
+                                key={link.name} 
+                                href={link.href}
+                                className={`transition-colors ${url === link.href ? 'text-brand-400 font-semibold' : 'text-gray-300 hover:text-white'}`}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
                     </div>
 
                     <div className="flex items-center gap-4">

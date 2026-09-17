@@ -15,21 +15,29 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/features', function () {
+    return Inertia::render('Features');
+})->name('features');
+
+Route::get('/languages-info', function () {
+    return Inertia::render('PublicLanguages');
+})->name('public.languages');
+
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('pricing');
+
+Route::get('/community', function () {
+    return Inertia::render('Community');
+})->name('community');
+
 Route::get('/languages', function () {
     if (Auth::check()) {
         return Inertia::render('Dashboard/Languages');
     }
 
-    return Inertia::render('Public/Languages');
+    return Inertia::render('PublicLanguages');
 })->name('languages');
-
-Route::get('/pricing', function () {
-    return Inertia::render('Public/Pricing');
-})->name('pricing');
-
-Route::get('/community', function () {
-    return Inertia::render('Public/Community');
-})->name('community');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
@@ -65,75 +73,84 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dynamic Language Routes - Works for all supported languages
     $allowedLanguages = ['japanese', 'chinese', 'korean', 'english', 'spanish'];
-    
-    Route::prefix('language/{lang}')->group(function () use ($allowedLanguages) {
-        Route::get('/', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+
+    Route::prefix('languages/{language}')->group(function () use ($allowedLanguages) {
+        Route::get('/', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Hub', [
                 'languageId' => $slug,
             ]);
-        })->name('language.hub');
+        })->name('languages.show');
 
-        Route::get('/study', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/study', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Study', [
                 'languageId' => $slug,
             ]);
-        })->name('language.study');
+        })->name('languages.study');
 
-        Route::get('/study/{lesson}', function (string $lang, string $lesson) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/study/{lesson}', function (string $language, string $lesson) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Lesson', [
                 'languageId' => $slug,
                 'lessonId' => $lesson,
             ]);
-        })->name('language.lesson');
+        })->name('languages.study.lesson');
 
-        Route::get('/practice', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/practice', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Practice', [
                 'languageId' => $slug,
             ]);
-        })->name('language.practice');
+        })->name('languages.practice');
 
-        // Hiragana quiz route - must be defined BEFORE the generic {quiz} route
-        Route::get('/practice/hiragana', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        // Hiragana quiz route - must be defined BEFORE the generic {category} route
+        Route::get('/practice/hiragana', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/HiraganaQuiz', [
                 'languageId' => $slug,
                 'quizId' => 'basic-hiragana',
             ]);
-        })->name('language.hiragana');
+        })->name('languages.practice.hiragana');
 
-        // Generic quiz route for other quizzes
-        Route::get('/practice/{quiz}', function (string $lang, string $quiz) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        // Generic practice category route
+        Route::get('/practice/{category}', function (string $language, string $category) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Dashboard/Japanese/Quiz', [
-                'quizId' => $quiz,
+            return Inertia::render('Language/Practice', [
+                'languageId' => $slug,
+                'category' => $category,
             ]);
-        })->name('language.quiz');
+        })->name('languages.practice.show');
 
-        Route::get('/progress', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/vocabulary', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
+            abort_unless(in_array($slug, $allowedLanguages, true), 404);
+            return Inertia::render('Language/Vocabulary', [
+                'languageId' => $slug,
+            ]);
+        })->name('languages.vocabulary');
+
+        Route::get('/progress', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Progress', [
                 'languageId' => $slug,
             ]);
-        })->name('language.progress');
+        })->name('languages.progress');
 
-        Route::get('/achievements', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/achievements', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Achievements', [
                 'languageId' => $slug,
             ]);
-        })->name('language.achievements');
+        })->name('languages.achievements');
     });
 
 

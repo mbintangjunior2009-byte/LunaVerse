@@ -86,7 +86,7 @@ export default function LessonCard({
     }
 
     return (
-        <Link href={`/language/japanese/study/${lesson.id}`} className="block h-full">
+        <Link href={`/languages/japanese/study/${lesson.id}`} className="block h-full">
             {body}
         </Link>
     );

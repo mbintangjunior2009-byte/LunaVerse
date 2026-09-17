@@ -10,13 +10,13 @@ import { cn } from '@/lib/utils';
  * Reusable Practice Card Component
  * Displays a practice quiz or exercise for any language
  */
-export default function PracticeCard({ 
-    languageId, 
-    category, 
-    status = 'available', 
+export default function PracticeCard({
+    languageId,
+    category,
+    status = 'available',
     score = null,
     questionCount = 10,
-    onClick 
+    onClick
 }) {
     const isLocked = status === 'locked';
     const isCompleted = status === 'completed';
@@ -116,7 +116,7 @@ export default function PracticeCard({
 
     // Only render Link if no onClick handler and not locked
     return (
-        <Link href={`/language/${languageId}/practice/${category.id}`} className="block h-full">
+        <Link href={`/languages/${languageId}/practice/${category.id}`} className="block h-full">
             {body}
         </Link>
     );

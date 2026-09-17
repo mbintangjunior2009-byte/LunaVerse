@@ -9,19 +9,19 @@ import { getAllLanguages } from '@/data/languageConfig';
 
 export default function Dashboard({ auth, backendProgress, languageProgresses }) {
     const languages = getAllLanguages();
-    
+
     // Calculate progress for each language using backend data
     const languagesWithProgress = languages.map((lang) => {
         // Get language-specific progress from backend if available
         const langProgress = languageProgresses?.[lang.id] || { xp: 0, completed_lessons: 0, completion_percentage: 0 };
-        
+
         const progressPercent = langProgress.completion_percentage || 0;
-        
+
         // Calculate level based on progress
         const levelIndex = Math.floor(progressPercent / 33.33);
         const levels = ['Beginner', 'Intermediate', 'Advanced'];
         const currentLevel = progressPercent > 0 ? levels[Math.min(levelIndex, 2)] : 'Not started';
-        
+
         return {
             ...lang,
             progress: progressPercent,
@@ -43,14 +43,14 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
     return (
         <DashboardLayout>
             <Head title="Dashboard" />
-            
+
             {/* Breadcrumb */}
             <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-400">
                 <span className="text-brand-300 font-medium">Dashboard</span>
             </nav>
-            
+
             {/* Welcome Banner */}
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-brand-900/50 to-brand-700/50 border border-brand-500/20 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden"
@@ -59,12 +59,12 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
                 <div className="relative z-10">
                     <h1 className="text-3xl font-bold mb-2">Welcome back, {auth.user.name}! 👋</h1>
                     <p className="text-gray-300 mb-4 max-w-lg">
-                        {backendProgress?.streak > 0 
+                        {backendProgress?.streak > 0
                             ? `You're doing great! You've maintained a ${backendProgress.streak}-day streak. Keep up the momentum!`
                             : "Start your learning journey today! Complete your first lesson to begin tracking your progress."
                         }
                     </p>
-                    <Link href={`/language/${primaryLanguage.id}`}>
+                    <Link href={`/languages/${primaryLanguage.id}`}>
                         <Button variant="primary" className="gap-2">
                             <Play className="w-4 h-4" /> Continue {primaryLanguage.name}
                         </Button>
@@ -94,7 +94,7 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
             <h2 className="text-xl font-bold mb-4">My Languages</h2>
             <div className="grid md:grid-cols-2 gap-6 mb-8">
                 {activeLanguages.map((lang) => (
-                    <Link key={lang.id} href={`/language/${lang.id}`}>
+                    <Link key={lang.id} href={`/languages/${lang.id}`}>
                         <InteractiveCard className="h-full">
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
@@ -109,18 +109,18 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
                                     <p className="font-bold">{lang.xp.toLocaleString()}</p>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-400">Course Progress</span>
                                     <span className="font-bold">{lang.progress}%</span>
                                 </div>
                                 <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full rounded-full transition-all duration-300" 
-                                        style={{ 
+                                    <div
+                                        className="h-full rounded-full transition-all duration-300"
+                                        style={{
                                             width: `${lang.progress}%`,
-                                            backgroundColor: lang.themeColor 
+                                            backgroundColor: lang.themeColor
                                         }}
                                     ></div>
                                 </div>
@@ -136,7 +136,7 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
                     <h2 className="text-xl font-bold mb-4">Explore More</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {exploreLanguages.map((lang) => (
-                            <Link key={lang.id} href={`/language/${lang.id}`}>
+                            <Link key={lang.id} href={`/languages/${lang.id}`}>
                                 <Card className="p-4 text-center hover:bg-white/10 transition-colors cursor-pointer border-dashed border-white/20">
                                     <span className="text-3xl block mb-2">{lang.flag}</span>
                                     <span className="font-medium">{lang.name}</span>

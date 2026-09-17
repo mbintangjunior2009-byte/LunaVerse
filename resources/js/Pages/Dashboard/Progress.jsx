@@ -9,16 +9,16 @@ import { getTotalLessonCount } from '@/data/languageCurriculum';
 
 export default function Progress() {
     const languages = getAllLanguages();
-    
+
     // Calculate progress for each language
     const languagesWithProgress = languages.map((lang) => {
         const progress = loadLanguageProgress(lang.id);
         const totalLessons = getTotalLessonCount(lang.id);
         const completedLessons = progress.completed.length;
-        const progressPercent = totalLessons > 0 
-            ? Math.round((completedLessons / totalLessons) * 100) 
+        const progressPercent = totalLessons > 0
+            ? Math.round((completedLessons / totalLessons) * 100)
             : 0;
-        
+
         return {
             ...lang,
             progress: progressPercent,
@@ -64,7 +64,7 @@ export default function Progress() {
 
             <div className="space-y-4">
                 {languagesWithProgress.map((lang) => (
-                    <Link key={lang.id} href={`/language/${lang.id}/progress`}>
+                    <Link key={lang.id} href={`/languages/${lang.id}/progress`}>
                         <Card className="hover:bg-white/5 transition-colors mb-4">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
@@ -81,12 +81,12 @@ export default function Progress() {
                                 <span className="font-bold">{lang.progress}%</span>
                             </div>
                             <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                                <div 
-                                    className="h-full rounded-full transition-all duration-300" 
-                                    style={{ 
+                                <div
+                                    className="h-full rounded-full transition-all duration-300"
+                                    style={{
                                         width: `${lang.progress}%`,
-                                        backgroundColor: lang.themeColor 
-                                    }} 
+                                        backgroundColor: lang.themeColor
+                                    }}
                                 />
                             </div>
                         </Card>

@@ -95,7 +95,7 @@ export default function Achievements() {
                 <span className="text-gray-600">›</span>
                 <Link href="/languages" className="hover:text-brand-300 transition-colors">Languages</Link>
                 <span className="text-gray-600">›</span>
-                <Link href="/language/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
+                <Link href="/languages/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
                 <span className="text-gray-600">›</span>
                 <span className="text-brand-300 font-medium">Achievements</span>
             </nav>
@@ -276,7 +276,7 @@ export default function Achievements() {
             </div>
 
             <div className="mt-8">
-                <Link href="/language/japanese" className="text-sm text-brand-300 hover:underline">
+                <Link href="/languages/japanese" className="text-sm text-brand-300 hover:underline">
                     ← Back to Japanese Hub
                 </Link>
             </div>

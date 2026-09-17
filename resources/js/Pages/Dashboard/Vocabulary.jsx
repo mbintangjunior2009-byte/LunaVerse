@@ -57,7 +57,7 @@ export default function Vocabulary() {
                 <h2 className="text-xl font-bold mb-4">Select a Language</h2>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {languages.map((lang) => (
-                        <Link key={lang.id} href={`/language/${lang.id}/study`}>
+                        <Link key={lang.id} href={`/languages/${lang.id}/study`}>
                             <Card className="p-4 text-center hover:border-brand-500/50 transition-colors cursor-pointer">
                                 <span className="text-3xl mb-2 block">{lang.flag}</span>
                                 <p className="font-medium text-sm">{lang.name}</p>
@@ -77,7 +77,7 @@ export default function Vocabulary() {
                                 <p className="text-sm text-brand-300">{word.reading}</p>
                                 <p className="text-sm text-gray-400 mt-1">{word.meaning}</p>
                             </div>
-                            <Link href={`/language/${word.language.toLowerCase()}`} className="text-xs text-brand-300 hover:underline">
+                            <Link href={`/languages/${word.language.toLowerCase()}`} className="text-xs text-brand-300 hover:underline">
                                 {word.language}
                             </Link>
                         </Card>

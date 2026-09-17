@@ -97,7 +97,7 @@ export default function Lesson({ lessonId }) {
                 <Card className="p-8 text-center">
                     <h1 className="text-2xl font-bold mb-2">Lesson not found</h1>
                     <p className="text-gray-400 mb-6">This study lesson does not exist in the Japanese curriculum.</p>
-                    <Button variant="primary" onClick={() => router.visit('/language/japanese/study')}>
+                    <Button variant="primary" onClick={() => router.visit('/languages/japanese/study')}>
                         Back to Study
                     </Button>
                 </Card>
@@ -122,11 +122,11 @@ export default function Lesson({ lessonId }) {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         {previous && (
-                            <Button variant="primary" onClick={() => router.visit(`/language/japanese/study/${previous.id}`)}>
+                            <Button variant="primary" onClick={() => router.visit(`/languages/japanese/study/${previous.id}`)}>
                                 Go to Previous Lesson
                             </Button>
                         )}
-                        <Button variant="outline" onClick={() => router.visit('/language/japanese/study')}>
+                        <Button variant="outline" onClick={() => router.visit('/languages/japanese/study')}>
                             Back to Study
                         </Button>
                     </div>

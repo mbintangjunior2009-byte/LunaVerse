@@ -114,7 +114,7 @@ export default function QuizCard({
     }
 
     return (
-        <Link href={`/language/${languageId}/practice/${quiz.id}`} className="block h-full">
+        <Link href={`/languages/${languageId}/practice/${quiz.id}`} className="block h-full">
             {body}
         </Link>
     );

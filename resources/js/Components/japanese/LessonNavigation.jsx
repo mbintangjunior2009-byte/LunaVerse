@@ -15,7 +15,7 @@ export default function LessonNavigation({
             <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
                 <div className="flex flex-col sm:flex-row gap-3">
                     {previous ? (
-                        <Link href={`/language/japanese/study/${previous.id}`}>
+                        <Link href={`/languages/japanese/study/${previous.id}`}>
                             <Button variant="outline" className="w-full sm:w-auto gap-2">
                                 <ChevronLeft className="w-4 h-4" />
                                 Previous Lesson
@@ -29,14 +29,14 @@ export default function LessonNavigation({
                     )}
 
                     {next ? (
-                        <Link href={`/language/japanese/study/${next.id}`}>
+                        <Link href={`/languages/japanese/study/${next.id}`}>
                             <Button variant="glass" className="w-full sm:w-auto gap-2">
                                 Next Lesson
                                 <ChevronRight className="w-4 h-4" />
                             </Button>
                         </Link>
                     ) : (
-                        <Link href="/language/japanese/study">
+                        <Link href="/languages/japanese/study">
                             <Button variant="glass" className="w-full sm:w-auto gap-2">
                                 Back to Study
                                 <ChevronRight className="w-4 h-4" />

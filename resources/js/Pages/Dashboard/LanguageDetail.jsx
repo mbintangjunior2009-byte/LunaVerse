@@ -97,7 +97,7 @@ export default function LanguageDetail({ language = 'Japanese', slug = 'japanese
 
                             <div className="w-full md:w-auto flex-shrink-0">
                                 {level.status === 'active' ? (
-                                    <Link href={`/language/${slug}/learn`}>
+                                    <Link href={`/languages/${slug}/learn`}>
                                         <Button variant="primary" size="lg" className="w-full md:w-auto gap-2">
                                             <Play className="w-5 h-5 fill-current" /> Continue
                                         </Button>

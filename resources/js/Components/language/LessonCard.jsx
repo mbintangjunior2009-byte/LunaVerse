@@ -91,7 +91,7 @@ export default function LessonCard({
     }
 
     return (
-        <Link href={`/language/${languageId}/study/${lesson.id}`} className="block h-full">
+        <Link href={`/languages/${languageId}/study/${lesson.id}`} className="block h-full">
             {body}
         </Link>
     );

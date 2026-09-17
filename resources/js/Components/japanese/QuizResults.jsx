@@ -57,7 +57,7 @@ export default function QuizResults({
                     <RotateCcw className="w-4 h-4" />
                     Retry Quiz
                 </Button>
-                <Link href="/language/japanese/practice">
+                <Link href="/languages/japanese/practice">
                     <Button variant="outline" className="w-full sm:w-auto">Back to Practice</Button>
                 </Link>
             </div>

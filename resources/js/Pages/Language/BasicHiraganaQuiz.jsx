@@ -117,23 +117,23 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                 // Calculate final results
                 const finalXP = questionXP + (isPerfect ? 50 : 0);
                 setXPEarned(prev => prev + (isPerfect ? 50 : 0));
-                
+
                 // Update best score
                 if (score > bestScore) {
                     setBestScore(score);
                     localStorage.setItem(`${currentConfig.storagePrefix}-best-score`, score);
                 }
-                
+
                 // Update total XP
                 const newTotalXP = totalXPEarned + finalXP;
                 setTotalXPEarned(newTotalXP);
                 localStorage.setItem(`${currentConfig.storagePrefix}-total-xp`, newTotalXP);
-                
+
                 // Update completion percentage
                 const newCompletion = Math.min(100, completionPercent + 10);
                 setCompletionPercent(newCompletion);
                 localStorage.setItem(`${currentConfig.storagePrefix}-completion`, newCompletion);
-                
+
                 setQuizState('result');
             } else {
                 setCurrentQuestionIndex(prev => prev + 1);
@@ -161,7 +161,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                     <div className="text-8xl mb-6">{currentConfig.icon}</div>
                     <h1 className="text-3xl font-bold mb-4">{currentConfig.title}</h1>
                     <p className="text-gray-400 mb-8">
-                        {currentConfig.description}. 
+                        {currentConfig.description}.
                         10 random questions per game.
                     </p>
 
@@ -196,7 +196,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                 <DashboardLayout>
                     <Head title={currentConfig.title} />
                     <div className="max-w-2xl mx-auto">
-                        <Link href="/language/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors mb-6">
+                        <Link href="/languages/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors mb-6">
                             <ArrowLeft className="w-4 h-4" />
                             Back to Practice
                         </Link>
@@ -216,7 +216,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     {standalone ? (
-                        <Link href="/language/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
+                        <Link href="/languages/japanese/practice" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-300 transition-colors">
                             <ArrowLeft className="w-4 h-4" />
                             Exit
                         </Link>
@@ -238,7 +238,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
 
                 {/* Progress Bar */}
                 <div className="w-full h-2 bg-white/10 rounded-full mb-8">
-                    <div 
+                    <div
                         className="h-full bg-gradient-to-r from-brand-500 to-brand-300 rounded-full transition-all duration-300"
                         style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
                     />
@@ -248,7 +248,7 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                 <Card className="p-8 mb-6">
                     <div className="text-center">
                         <div className="text-8xl font-bold mb-8">{currentQuestion.question}</div>
-                        
+
                         <div className="grid grid-cols-2 gap-4">
                             {currentQuestion.choices.map((choice, index) => {
                                 let buttonClass = 'bg-white/5 hover:bg-white/10 border-white/20';
@@ -293,11 +293,10 @@ export default function BasicHiraganaQuiz({ quizType = 'basic-hiragana', standal
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className={`text-center p-4 rounded-xl ${
-                                isCorrect 
-                                    ? 'bg-emerald-500/10 border border-emerald-500/30' 
+                            className={`text-center p-4 rounded-xl ${isCorrect
+                                    ? 'bg-emerald-500/10 border border-emerald-500/30'
                                     : 'bg-red-500/10 border border-red-500/30'
-                            }`}
+                                }`}
                         >
                             <div className={`font-bold text-lg ${isCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
                                 {isCorrect ? 'Correct!' : 'Incorrect'}

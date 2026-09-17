@@ -20,7 +20,7 @@ export default function LanguageStudy({ languageId }) {
     return (
         <DashboardLayout>
             <Head title={`${config.name} - Study`} />
-            
+
             <LanguageHeader languageId={languageId} currentSection="study" />
 
             <div className="mb-8">
@@ -30,7 +30,7 @@ export default function LanguageStudy({ languageId }) {
 
             {config.studyCategories.map((category) => {
                 const categoryLessons = category.lessons || [];
-                const categoryCompleted = categoryLessons.filter((lesson) => 
+                const categoryCompleted = categoryLessons.filter((lesson) =>
                     progress.completed.includes(lesson.id)
                 ).length;
                 const categoryProgress = categoryLessons.length > 0 ? Math.round((categoryCompleted / categoryLessons.length) * 100) : 0;
@@ -56,9 +56,9 @@ export default function LanguageStudy({ languageId }) {
                             <div className="mt-3 w-full h-2 bg-white/10 rounded-full overflow-hidden">
                                 <div
                                     className="h-full rounded-full transition-all duration-300"
-                                    style={{ 
+                                    style={{
                                         width: `${categoryProgress}%`,
-                                        backgroundColor: config.themeColor 
+                                        backgroundColor: config.themeColor
                                     }}
                                 />
                             </div>
@@ -72,7 +72,7 @@ export default function LanguageStudy({ languageId }) {
                                     const lessonProgress = isCompleted ? 100 : isUnlocked ? 0 : 0;
 
                                     return (
-                                        <Link key={lesson.id} href={`/language/${languageId}/study/${lesson.id}`} className="block">
+                                        <Link key={lesson.id} href={`/languages/${languageId}/study/${lesson.id}`} className="block">
                                             <Card className={cn(
                                                 'p-5 border transition-all hover:scale-[1.02] cursor-pointer',
                                                 isUnlocked ? 'border-white/10 hover:border-brand-500/40' : 'border-white/5 opacity-60'
@@ -111,8 +111,8 @@ export default function LanguageStudy({ languageId }) {
                                                     </div>
                                                     <span className={cn(
                                                         'text-xs font-medium px-2 py-1 rounded-full',
-                                                        isCompleted ? 'text-emerald-300 bg-emerald-500/10' : 
-                                                        isUnlocked ? 'text-brand-300 bg-brand-500/10' : 'text-gray-400 bg-white/5'
+                                                        isCompleted ? 'text-emerald-300 bg-emerald-500/10' :
+                                                            isUnlocked ? 'text-brand-300 bg-brand-500/10' : 'text-gray-400 bg-white/5'
                                                     )}>
                                                         {isCompleted ? 'Completed' : isUnlocked ? 'Continue' : 'Locked'}
                                                     </span>
