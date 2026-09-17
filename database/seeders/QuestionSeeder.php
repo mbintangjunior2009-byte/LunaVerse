@@ -12,9 +12,12 @@ class QuestionSeeder extends Seeder
 
     /**
      * Seed the application's database with practice questions.
+     * Safe to run multiple times — clears existing questions first.
      */
     public function run(): void
     {
+        // Wipe existing rows so re-seeding is idempotent
+        \DB::table('questions')->truncate();
         // Hiragana Questions (40)
         $hiraganaQuestions = [
             ['question' => 'あ', 'options' => ['a', 'i', 'u', 'e', 'o'], 'answer' => 'a'],
@@ -128,32 +131,35 @@ class QuestionSeeder extends Seeder
         }
 
         // Kanji Questions (15) - N5 Level
+        // Type: kanji_meaning — answer is the 'meaning' field, options provided for the quiz UI
         $kanjiQuestions = [
-            ['question' => '日', 'meaning' => 'day/sun', 'reading' => 'nichi/hi'],
-            ['question' => '本', 'meaning' => 'book', 'reading' => 'hon'],
-            ['question' => '人', 'meaning' => 'person', 'reading' => 'jin/hito'],
-            ['question' => '月', 'meaning' => 'month/moon', 'reading' => 'getsu/tsuki'],
-            ['question' => '火', 'meaning' => 'fire', 'reading' => 'ka/hi'],
-            ['question' => '水', 'meaning' => 'water', 'reading' => 'sui/mizu'],
-            ['question' => '木', 'meaning' => 'tree', 'reading' => 'moku/ki'],
-            ['question' => '金', 'meaning' => 'gold/money', 'reading' => 'kin/kane'],
-            ['question' => '土', 'meaning' => 'earth/soil', 'reading' => 'do/tsuchi'],
-            ['question' => '山', 'meaning' => 'mountain', 'reading' => 'san/yama'],
-            ['question' => '川', 'meaning' => 'river', 'reading' => 'sen/kawa'],
-            ['question' => '花', 'meaning' => 'flower', 'reading' => 'ka/hana'],
-            ['question' => '雨', 'meaning' => 'rain', 'reading' => 'u/ame'],
-            ['question' => '空', 'meaning' => 'sky', 'reading' => 'kuu/sora'],
-            ['question' => '風', 'meaning' => 'wind', 'reading' => 'fuu/kaze'],
+            ['question' => '日', 'meaning' => 'day / sun',    'reading' => 'nichi / hi',   'options' => ['day / sun', 'moon / month', 'fire', 'water']],
+            ['question' => '本', 'meaning' => 'book / origin','reading' => 'hon',           'options' => ['book / origin', 'tree', 'mountain', 'river']],
+            ['question' => '人', 'meaning' => 'person',       'reading' => 'jin / hito',    'options' => ['person', 'big', 'small', 'mouth']],
+            ['question' => '月', 'meaning' => 'moon / month', 'reading' => 'getsu / tsuki', 'options' => ['moon / month', 'day / sun', 'fire', 'water']],
+            ['question' => '火', 'meaning' => 'fire',         'reading' => 'ka / hi',       'options' => ['fire', 'water', 'earth', 'tree']],
+            ['question' => '水', 'meaning' => 'water',        'reading' => 'sui / mizu',    'options' => ['water', 'fire', 'gold', 'earth']],
+            ['question' => '木', 'meaning' => 'tree / wood',  'reading' => 'moku / ki',     'options' => ['tree / wood', 'mountain', 'river', 'flower']],
+            ['question' => '金', 'meaning' => 'gold / money', 'reading' => 'kin / kane',    'options' => ['gold / money', 'earth / soil', 'fire', 'water']],
+            ['question' => '土', 'meaning' => 'earth / soil', 'reading' => 'do / tsuchi',   'options' => ['earth / soil', 'gold / money', 'tree', 'fire']],
+            ['question' => '山', 'meaning' => 'mountain',     'reading' => 'san / yama',    'options' => ['mountain', 'river', 'sky', 'flower']],
+            ['question' => '川', 'meaning' => 'river',        'reading' => 'sen / kawa',    'options' => ['river', 'mountain', 'rain', 'sky']],
+            ['question' => '花', 'meaning' => 'flower',       'reading' => 'ka / hana',     'options' => ['flower', 'rain', 'sky', 'wind']],
+            ['question' => '雨', 'meaning' => 'rain',         'reading' => 'u / ame',       'options' => ['rain', 'sky', 'wind', 'flower']],
+            ['question' => '空', 'meaning' => 'sky',          'reading' => 'kuu / sora',    'options' => ['sky', 'rain', 'wind', 'tree']],
+            ['question' => '風', 'meaning' => 'wind',         'reading' => 'fuu / kaze',    'options' => ['wind', 'sky', 'rain', 'mountain']],
         ];
 
         foreach ($kanjiQuestions as $q) {
             Question::create([
                 'category' => 'kanji',
                 'question_data' => [
-                    'type' => 'kanji_meaning',
+                    'type'    => 'kanji_meaning',
                     'question' => $q['question'],
-                    'meaning' => $q['meaning'],
-                    'reading' => $q['reading'],
+                    'meaning'  => $q['meaning'],
+                    'reading'  => $q['reading'],
+                    'options'  => $q['options'],
+                    'answer'   => $q['meaning'],   // answer == meaning for UI matching
                 ],
             ]);
         }

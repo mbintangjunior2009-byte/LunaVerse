@@ -173,11 +173,15 @@ export default function LanguageHub({ languageId }) {
                         const categoryLessons = category.lessons?.length || 0;
                         const categoryCompleted = progress.completed.filter(l => l.startsWith(category.id)).length;
                         const categoryProgress = categoryLessons > 0 ? Math.round((categoryCompleted / categoryLessons) * 100) : 0;
+
                         return (
                             <StudyCard
                                 key={category.id}
                                 languageId={languageId}
                                 category={category}
+                                // href intentionally omitted — StudyCard default:
+                                //   /languages/{languageId}/study/{category.id}
+                                // which now resolves to the StudyCategory overview page.
                                 status={index === 0 ? 'available' : index <= completedLessons ? 'available' : 'locked'}
                                 progress={categoryProgress}
                             />
@@ -190,12 +194,12 @@ export default function LanguageHub({ languageId }) {
             <div>
                 <h2 className="text-2xl font-bold mb-4">Practice</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {config.practiceCategories.map((category, index) => (
+                    {config.practiceCategories.map((category) => (
                         <PracticeCard
                             key={category.id}
                             languageId={languageId}
                             category={category}
-                            status={index === 0 ? 'available' : 'locked'}
+                            status="available"
                             questionCount={category.questions}
                         />
                     ))}

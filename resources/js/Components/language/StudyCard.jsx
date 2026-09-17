@@ -8,13 +8,22 @@ import { cn } from '@/lib/utils';
 
 /**
  * Reusable Study Card Component
- * Displays a study category with lesson count for any language
+ * Displays a study category with lesson count for any language.
+ *
+ * @prop {string}   languageId  – e.g. 'japanese'
+ * @prop {object}   category    – study category object from languageConfig
+ * @prop {string}   status      – 'available' | 'locked' | 'completed'
+ * @prop {number}   progress    – 0-100 completion percentage
+ * @prop {string}   [href]      – optional explicit destination; overrides the
+ *                                default `/languages/{languageId}/study/{category.id}`
+ * @prop {function} [onClick]   – optional click handler (suppresses the Link wrapper)
  */
 export default function StudyCard({
     languageId,
     category,
     status = 'available',
     progress = 0,
+    href,
     onClick
 }) {
     const isLocked = status === 'locked';
@@ -114,8 +123,13 @@ export default function StudyCard({
         return <div className="h-full">{body}</div>;
     }
 
+    if (onClick) {
+        return <div className="h-full cursor-pointer" onClick={onClick}>{body}</div>;
+    }
+
+    const destination = href ?? `/languages/${languageId}/study/${category.id}`;
     return (
-        <Link href={`/languages/${languageId}/study/${category.id}`} className="block h-full">
+        <Link href={destination} className="block h-full">
             {body}
         </Link>
     );

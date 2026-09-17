@@ -41,10 +41,13 @@ export default function ProgressCard({
                 {Icon && <Icon className="w-3.5 h-3.5" />}
                 {label}
             </p>
-            <p className={cn('text-3xl font-bold', colorClasses[color].split(' ')[0])}>
-                {total ? `${value}<span className="text-lg text-gray-500">/${total}</span>` : value}
-                {typeof value === 'number' && !total && !percentage && '%'}
-            </p>
+            <div className={cn('text-3xl font-bold', colorClasses[color].split(' ')[0])}>
+                {value}
+                {total !== null && (
+                    <span className="text-lg text-gray-500">/{total}</span>
+                )}
+                {typeof value === 'number' && total === null && percentage === null && '%'}
+            </div>
             
             {showProgress && (
                 <div className="mt-2 w-full h-2 bg-white/10 rounded-full overflow-hidden">

@@ -92,21 +92,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]);
         })->name('languages.study');
 
-        Route::get('/study/{lesson}', function (string $language, string $lesson) use ($allowedLanguages) {
+        // Study category overview — must be defined BEFORE the generic {lesson} wildcard
+        $studyCategories = ['hiragana', 'katakana', 'kanji', 'grammar', 'vocabulary', 'listening'];
+        Route::get('/study/{category}', function (string $language, string $category) use ($allowedLanguages, $studyCategories) {
+            $slug = strtolower($language);
+            abort_unless(in_array($slug, $allowedLanguages, true), 404);
+            // If the segment matches a known study category, show the category overview
+            if (in_array($category, $studyCategories, true)) {
+                return Inertia::render('Language/StudyCategory', [
+                    'languageId' => $slug,
+                    'categoryId' => $category,
+                ]);
+            }
+            // Otherwise treat it as a lesson ID and render the lesson viewer
+            return Inertia::render('Language/Lesson', [
+                'languageId' => $slug,
+                'lessonId'   => $category,
+            ]);
+        })->name('languages.study.show');
+
+        // Explicit lesson route keeps working (e.g. links generated with the full lesson id)
+        Route::get('/study/{category}/{lesson}', function (string $language, string $category, string $lesson) use ($allowedLanguages) {
             $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Lesson', [
                 'languageId' => $slug,
-                'lessonId' => $lesson,
+                'lessonId'   => $lesson,
             ]);
         })->name('languages.study.lesson');
 
         Route::get('/practice', function (string $language) use ($allowedLanguages) {
             $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/Practice', [
-                'languageId' => $slug,
-            ]);
+            // Delegate to PracticeController so unlock/score state is passed to the view
+            return app(\App\Http\Controllers\PracticeController::class)->index($slug);
         })->name('languages.practice');
 
         // Hiragana quiz route - must be defined BEFORE the generic {category} route
@@ -119,13 +138,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]);
         })->name('languages.practice.hiragana');
 
-        // Generic practice category route
+        // Generic practice category quiz (kanji, vocabulary, grammar, listening, …)
         Route::get('/practice/{category}', function (string $language, string $category) use ($allowedLanguages) {
             $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/Practice', [
+            $validCategories = ['katakana', 'kanji', 'vocabulary', 'grammar', 'listening'];
+            abort_unless(in_array($category, $validCategories, true), 404);
+            return Inertia::render('Language/CategoryQuiz', [
                 'languageId' => $slug,
-                'category' => $category,
+                'category'   => $category,
             ]);
         })->name('languages.practice.show');
 

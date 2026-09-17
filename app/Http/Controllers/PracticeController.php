@@ -112,93 +112,106 @@ class PracticeController extends Controller
 
     /**
      * Get practice page with category unlock status.
+     *
+     * @param string $language  Language slug (default: 'japanese').
+     *                          Pass 'legacy' to render the old Practice/Index page
+     *                          (used by the standalone /practice route).
      */
-    public function index(string $language = 'japanese')
+    public function index(string $language = 'legacy')
     {
         $user = Auth::user();
 
         // Get all practice progress for the user
         $practiceProgress = $user->practiceProgress()->get()->keyBy('category');
 
-        // Define categories with their metadata
+        // Category metadata (shared between legacy and language-scoped pages)
         $categories = [
             [
-                'id' => 'hiragana',
-                'name' => 'Hiragana',
-                'icon' => 'あ',
-                'description' => 'Learn basic Japanese characters',
-                'questions' => 40,
-                'xp_reward' => 100,
-                'is_unlocked' => $practiceProgress->get('hiragana')?->is_unlocked ?? false,
+                'id'           => 'hiragana',
+                'name'         => 'Hiragana',
+                'icon'         => 'あ',
+                'description'  => 'Master the basic Japanese phonetic script',
+                'questions'    => 40,
+                'xp_reward'    => 100,
+                'is_unlocked'  => $practiceProgress->get('hiragana')?->is_unlocked ?? true,
                 'is_completed' => $practiceProgress->get('hiragana')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('hiragana')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('hiragana')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('hiragana')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('hiragana')?->attempts ?? 0,
             ],
             [
-                'id' => 'katakana',
-                'name' => 'Katakana',
-                'icon' => 'ア',
-                'description' => 'Learn Katakana characters',
-                'questions' => 40,
-                'xp_reward' => 100,
-                'is_unlocked' => $practiceProgress->get('katakana')?->is_unlocked ?? false,
+                'id'           => 'katakana',
+                'name'         => 'Katakana',
+                'icon'         => 'ア',
+                'description'  => 'Learn Katakana characters used for foreign words',
+                'questions'    => 40,
+                'xp_reward'    => 100,
+                'is_unlocked'  => $practiceProgress->get('katakana')?->is_unlocked ?? false,
                 'is_completed' => $practiceProgress->get('katakana')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('katakana')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('katakana')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('katakana')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('katakana')?->attempts ?? 0,
             ],
             [
-                'id' => 'kanji',
-                'name' => 'Kanji',
-                'icon' => '漢',
-                'description' => 'Learn N5 level Kanji',
-                'questions' => 15,
-                'xp_reward' => 150,
-                'is_unlocked' => $practiceProgress->get('kanji')?->is_unlocked ?? false,
+                'id'           => 'kanji',
+                'name'         => 'Kanji',
+                'icon'         => '漢',
+                'description'  => 'Learn N5 level Kanji with readings and meanings',
+                'questions'    => 15,
+                'xp_reward'    => 150,
+                'is_unlocked'  => $practiceProgress->get('kanji')?->is_unlocked ?? false,
                 'is_completed' => $practiceProgress->get('kanji')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('kanji')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('kanji')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('kanji')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('kanji')?->attempts ?? 0,
             ],
             [
-                'id' => 'vocabulary',
-                'name' => 'Vocabulary',
-                'icon' => '語',
-                'description' => 'Build your vocabulary',
-                'questions' => 30,
-                'xp_reward' => 120,
-                'is_unlocked' => $practiceProgress->get('vocabulary')?->is_unlocked ?? false,
+                'id'           => 'vocabulary',
+                'name'         => 'Vocabulary',
+                'icon'         => '語',
+                'description'  => 'Build your Japanese vocabulary',
+                'questions'    => 30,
+                'xp_reward'    => 120,
+                'is_unlocked'  => $practiceProgress->get('vocabulary')?->is_unlocked ?? false,
                 'is_completed' => $practiceProgress->get('vocabulary')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('vocabulary')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('vocabulary')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('vocabulary')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('vocabulary')?->attempts ?? 0,
             ],
             [
-                'id' => 'grammar',
-                'name' => 'Grammar',
-                'icon' => '文',
-                'description' => 'Learn Japanese grammar',
-                'questions' => 20,
-                'xp_reward' => 130,
-                'is_unlocked' => $practiceProgress->get('grammar')?->is_unlocked ?? false,
+                'id'           => 'grammar',
+                'name'         => 'Grammar',
+                'icon'         => '文',
+                'description'  => 'Practice Japanese grammar and sentence patterns',
+                'questions'    => 20,
+                'xp_reward'    => 130,
+                'is_unlocked'  => $practiceProgress->get('grammar')?->is_unlocked ?? false,
                 'is_completed' => $practiceProgress->get('grammar')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('grammar')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('grammar')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('grammar')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('grammar')?->attempts ?? 0,
             ],
             [
-                'id' => 'listening',
-                'name' => 'Listening',
-                'icon' => '聴',
-                'description' => 'Practice listening skills',
-                'questions' => 20,
-                'xp_reward' => 140,
-                'is_unlocked' => $practiceProgress->get('listening')?->is_unlocked ?? false,
+                'id'           => 'listening',
+                'name'         => 'Listening',
+                'icon'         => '聴',
+                'description'  => 'Practise listening comprehension',
+                'questions'    => 20,
+                'xp_reward'    => 140,
+                'is_unlocked'  => $practiceProgress->get('listening')?->is_unlocked ?? false,
                 'is_completed' => $practiceProgress->get('listening')?->is_completed ?? false,
-                'best_score' => $practiceProgress->get('listening')?->best_score ?? 0,
-                'attempts' => $practiceProgress->get('listening')?->attempts ?? 0,
+                'best_score'   => $practiceProgress->get('listening')?->best_score ?? 0,
+                'attempts'     => $practiceProgress->get('listening')?->attempts ?? 0,
             ],
         ];
 
+        // Language-scoped route: render Language/Practice with backendCategories
+        if ($language !== 'legacy') {
+            return Inertia::render('Language/Practice', [
+                'languageId'        => $language,
+                'backendCategories' => $categories,
+            ]);
+        }
+
+        // Legacy standalone /practice route
         return Inertia::render('Practice/Index', [
             'categories' => $categories,
-            'language'   => $language,
+            'language'   => 'japanese',
         ]);
     }
 }
