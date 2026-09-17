@@ -51,7 +51,7 @@ export function getLessonById(languageId, lessonId) {
 export function getAdjacentLessons(languageId, lessonId) {
     const curriculum = getLanguageCurriculum(languageId);
     const allLessons = [];
-    
+
     curriculum.forEach((category) => {
         category.lessons.forEach((lesson) => {
             allLessons.push({
@@ -63,7 +63,7 @@ export function getAdjacentLessons(languageId, lessonId) {
     });
 
     const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
-    
+
     return {
         previous: currentIndex > 0 ? allLessons[currentIndex - 1] : null,
         next: currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null,
@@ -76,7 +76,7 @@ export function getAdjacentLessons(languageId, lessonId) {
 export function isLessonUnlocked(languageId, lessonId, completedIds) {
     const curriculum = getLanguageCurriculum(languageId);
     const allLessons = [];
-    
+
     curriculum.forEach((category) => {
         category.lessons.forEach((lesson) => {
             allLessons.push(lesson.id);
@@ -84,10 +84,10 @@ export function isLessonUnlocked(languageId, lessonId, completedIds) {
     });
 
     const lessonIndex = allLessons.indexOf(lessonId);
-    
+
     // First lesson is always unlocked
     if (lessonIndex === 0) return true;
-    
+
     // Lesson is unlocked if the previous lesson is completed
     const previousLessonId = allLessons[lessonIndex - 1];
     return completedIds.includes(previousLessonId);

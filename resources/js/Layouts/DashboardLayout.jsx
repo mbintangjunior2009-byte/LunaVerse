@@ -3,7 +3,8 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard, Languages, BookOpen,
     Brain, Trophy, Target, Calendar, Sparkles, LogOut,
-    Search, Bell, User as UserIcon, Settings, Menu, X, Coins, Flame, ChevronRight
+    Search, Bell, User as UserIcon, Settings, Menu, X, Coins, Flame, ChevronRight,
+    Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/Components/ui/Button';
@@ -62,12 +63,18 @@ export default function DashboardLayout({ children }) {
     const profileRef = useRef(null);
 
     const searchResults = useMemo(() => {
+        const adminEntries = user?.role === 'admin' ? [
+            { label: 'Admin Dashboard', href: '/admin/dashboard', type: 'Admin' },
+            { label: 'User Management', href: '/admin/users', type: 'Admin' },
+            { label: 'Site Settings', href: '/admin/settings', type: 'Admin' },
+        ] : [];
+        const catalog = [...searchCatalog, ...adminEntries];
         const q = searchQuery.trim().toLowerCase();
-        if (!q) return searchCatalog.slice(0, 6);
-        return searchCatalog.filter((item) =>
+        if (!q) return catalog.slice(0, 6);
+        return catalog.filter((item) =>
             item.label.toLowerCase().includes(q) || item.type.toLowerCase().includes(q)
         ).slice(0, 8);
-    }, [searchQuery]);
+    }, [searchQuery, user?.role]);
 
     useEffect(() => {
         const onPointerDown = (event) => {
@@ -147,6 +154,27 @@ export default function DashboardLayout({ children }) {
                 </div>
 
                 <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+                    {user?.role === 'admin' && (
+                        <Link
+                            href="/admin/dashboard"
+                            onClick={() => setSidebarOpen(false)}
+                            className={cn(
+                                "flex items-center justify-between px-4 py-3 rounded-xl transition-all text-sm font-semibold mb-3 border",
+                                isActivePath(currentUrl, '/admin')
+                                    ? "bg-purple-600/30 text-purple-200 border-purple-500/60 shadow-lg shadow-purple-500/20"
+                                    : "bg-purple-950/40 text-purple-300 border-purple-500/30 hover:bg-purple-900/50 hover:text-white"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <Shield className="w-5 h-5 text-purple-400" />
+                                <span>Admin Panel</span>
+                            </div>
+                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/40">
+                                Admin
+                            </span>
+                        </Link>
+                    )}
+
                     {navItems.map((item) => {
                         const active = isActivePath(currentUrl, item.href);
                         return (
@@ -298,6 +326,15 @@ export default function DashboardLayout({ children }) {
                             </button>
                             {profileOpen && (
                                 <div className="absolute right-0 mt-3 w-52 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-50 overflow-hidden py-1">
+                                    {user?.role === 'admin' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => goTo('/admin/dashboard')}
+                                            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-purple-300 hover:bg-purple-500/15 font-semibold border-b border-white/5"
+                                        >
+                                            <Shield className="w-4 h-4 text-purple-400" /> Admin Panel
+                                        </button>
+                                    )}
                                     <button
                                         type="button"
                                         onClick={() => goTo('/profile')}

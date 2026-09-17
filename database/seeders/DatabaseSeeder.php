@@ -17,10 +17,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@linguanova.com'],
+            [
+                'name' => 'Admin LinguaNova',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role' => 'user',
+                'email_verified_at' => now(),
+            ]
+        );
 
         $this->call([
             QuestionSeeder::class,
