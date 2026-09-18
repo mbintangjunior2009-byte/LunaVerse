@@ -31,6 +31,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Invalidate any pre-existing session so a logged-in admin account
+        // cannot persist into the newly registered user's session.
+        if (Auth::check()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -38,9 +46,10 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'role'     => 'user', // explicitly 'user' — never inherits admin from session state
         ]);
 
         $user->progress()->create([

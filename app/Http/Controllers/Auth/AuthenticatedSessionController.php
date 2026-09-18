@@ -29,6 +29,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Destroy any existing session (stale auth state, old admin session, etc.)
+        // before validating credentials so prior identity cannot bleed through.
+        if (Auth::check()) {
+            Auth::guard('web')->logout();
+        }
+
         $request->authenticate();
 
         $request->session()->regenerate();

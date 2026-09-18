@@ -132,7 +132,11 @@ export default function DashboardLayout({ children }) {
 
             {/* ── Sidebar ── */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-40 w-72 bg-dark-800/50 backdrop-blur-xl border-r border-white/5 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col",
+                // Mobile: slide-over panel fixed to left edge
+                // Desktop: sticky column that stays in view while content scrolls
+                "fixed inset-y-0 left-0 z-40 w-72 bg-dark-800/50 backdrop-blur-xl border-r border-white/5",
+                "transform transition-transform duration-300 ease-in-out",
+                "md:translate-x-0 md:relative md:sticky md:top-0 md:h-screen md:flex md:flex-col md:flex-shrink-0",
                 sidebarOpen ? "translate-x-0" : "-translate-x-full"
             )}>
                 {/* Logo */}
@@ -257,7 +261,7 @@ export default function DashboardLayout({ children }) {
             <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
 
                 {/* Desktop header */}
-                <header className="hidden md:flex h-20 items-center justify-between px-8 border-b border-white/5 bg-dark-900/50 backdrop-blur-sm shrink-0">
+                <header className="hidden md:flex h-20 items-center justify-between px-8 border-b border-white/5 bg-dark-900/50 backdrop-blur-sm shrink-0 relative z-30">
 
                     {/* Search */}
                     <div className="flex-1 max-w-md relative" ref={searchRef}>
@@ -273,7 +277,7 @@ export default function DashboardLayout({ children }) {
                             />
                         </form>
                         {searchOpen && (
-                            <div className="absolute top-12 left-0 right-0 z-50 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
+                            <div className="absolute top-12 left-0 right-0 z-[60] rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
                                 {searchResults.length === 0 ? (
                                     <p className="px-4 py-3 text-sm text-gray-400">
                                         {t('search.noResults')} "{searchQuery}".
@@ -315,7 +319,7 @@ export default function DashboardLayout({ children }) {
                                 <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-500" />
                             </button>
                             {notifOpen && (
-                                <div className="absolute right-0 mt-3 w-80 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-50 overflow-hidden">
+                                <div className="absolute right-0 mt-3 w-80 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-[60] overflow-hidden">
                                     <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
                                         <h4 className="font-bold text-sm">{t('notifications.title')}</h4>
                                         <span className="text-xs text-brand-300">
@@ -352,7 +356,7 @@ export default function DashboardLayout({ children }) {
                                 </div>
                             </button>
                             {profileOpen && (
-                                <div className="absolute right-0 mt-3 w-52 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-50 overflow-hidden py-1">
+                                <div className="absolute right-0 mt-3 w-52 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-[60] overflow-hidden py-1">
                                     {user?.role === 'admin' && (
                                         <button
                                             type="button"
