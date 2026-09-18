@@ -1,32 +1,22 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { BookOpen, Lock, Clock, Signal, ChevronRight } from 'lucide-react';
+import { BookOpen, Lock, ChevronRight } from 'lucide-react';
 import { Card } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
 import { cn } from '@/lib/utils';
 
-/**
- * Reusable Study Card Component
- * Displays a study category with lesson count for any language.
- *
- * @prop {string}   languageId  – e.g. 'japanese'
- * @prop {object}   category    – study category object from languageConfig
- * @prop {string}   status      – 'available' | 'locked' | 'completed'
- * @prop {number}   progress    – 0-100 completion percentage
- * @prop {string}   [href]      – optional explicit destination; overrides the
- *                                default `/languages/{languageId}/study/{category.id}`
- * @prop {function} [onClick]   – optional click handler (suppresses the Link wrapper)
- */
 export default function StudyCard({
     languageId,
     category,
-    status = 'available',
+    status   = 'available',
     progress = 0,
     href,
     onClick
 }) {
-    const isLocked = status === 'locked';
+    const { t }       = useTranslation();
+    const isLocked    = status === 'locked';
     const isCompleted = status === 'completed';
     const lessonCount = category.lessons?.length || 0;
 
@@ -47,7 +37,7 @@ export default function StudyCard({
                     <div className={cn(
                         'w-12 h-12 rounded-xl flex items-center justify-center text-2xl border',
                         isCompleted && 'bg-emerald-500/15 border-emerald-500/30',
-                        isLocked && 'bg-white/5 border-white/10',
+                        isLocked    && 'bg-white/5 border-white/10',
                         !isCompleted && !isLocked && 'bg-brand-500/15 border-brand-500/30'
                     )}>
                         {category.icon}
@@ -60,7 +50,7 @@ export default function StudyCard({
                 <div className={cn(
                     'w-10 h-10 rounded-xl flex items-center justify-center border shrink-0',
                     isCompleted && 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-                    isLocked && 'bg-white/5 border-white/10 text-gray-500',
+                    isLocked    && 'bg-white/5 border-white/10 text-gray-500',
                     !isCompleted && !isLocked && 'bg-brand-500/15 border-brand-500/30 text-brand-300'
                 )}>
                     {isCompleted ? (
@@ -79,7 +69,7 @@ export default function StudyCard({
                 <div className="flex items-center gap-4 mb-4 text-sm text-gray-400">
                     <div className="flex items-center gap-1">
                         <BookOpen className="w-4 h-4" />
-                        <span>{lessonCount} lessons</span>
+                        <span>{lessonCount} {t('sections.lessons').toLowerCase()}</span>
                     </div>
                 </div>
             )}
@@ -87,7 +77,7 @@ export default function StudyCard({
             {progress > 0 && (
                 <div className="mb-4">
                     <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-400">Progress</span>
+                        <span className="text-gray-400">{t('sections.progress')}</span>
                         <span className="font-bold text-white">{progress}%</span>
                     </div>
                     <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
@@ -103,29 +93,24 @@ export default function StudyCard({
                 <span className={cn(
                     'text-xs font-medium px-2.5 py-1 rounded-full border',
                     isCompleted && 'text-emerald-300 bg-emerald-500/10 border-emerald-500/20',
-                    isLocked && 'text-gray-400 bg-white/5 border-white/10',
+                    isLocked    && 'text-gray-400 bg-white/5 border-white/10',
                     !isCompleted && !isLocked && 'text-brand-300 bg-brand-500/10 border-brand-500/20'
                 )}>
-                    {isCompleted ? 'Completed' : isLocked ? 'Locked' : 'Available'}
+                    {isCompleted ? t('stats.completed') : isLocked ? t('stats.locked') : t('stats.available')}
                 </span>
 
                 {!isLocked && (
                     <Button variant="primary" size="sm" className="gap-1 pointer-events-none">
                         <BookOpen className="w-3.5 h-3.5" />
-                        Start
+                        {t('buttons.start')}
                     </Button>
                 )}
             </div>
         </motion.div>
     );
 
-    if (isLocked) {
-        return <div className="h-full">{body}</div>;
-    }
-
-    if (onClick) {
-        return <div className="h-full cursor-pointer" onClick={onClick}>{body}</div>;
-    }
+    if (isLocked) return <div className="h-full">{body}</div>;
+    if (onClick)  return <div className="h-full cursor-pointer" onClick={onClick}>{body}</div>;
 
     const destination = href ?? `/languages/${languageId}/study/${category.id}`;
     return (

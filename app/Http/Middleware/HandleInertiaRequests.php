@@ -34,6 +34,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // Current Laravel application locale — can be used server-side if needed.
+            // The actual UI language is driven client-side by i18next / localStorage.
+            'locale' => app()->getLocale(),
         ];
     }
 }

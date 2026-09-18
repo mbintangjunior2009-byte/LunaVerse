@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Head, router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Card } from '@/Components/ui/Card';
@@ -23,25 +24,19 @@ import LessonNavigation from '@/Components/japanese/LessonNavigation';
 import LessonProgressUpdate from '@/Components/japanese/LessonProgressUpdate';
 import LessonCompletionOverlay from '@/Components/japanese/LessonCompletionOverlay';
 
-/**
- * Dynamic Language Lesson Page
- * Works for any supported language
- */
 export default function LanguageLesson({ languageId, lessonId }) {
-    const config = getLanguageConfig(languageId);
-    const lesson = getLessonById(languageId, lessonId);
+    const { t } = useTranslation();
+    const config   = getLanguageConfig(languageId);
+    const lesson   = getLessonById(languageId, lessonId);
     const { previous, next } = getAdjacentLessons(languageId, lessonId);
-    const content = useMemo(() => lesson ? buildLessonViewerContent(lesson) : null, [lesson]);
+    const content  = useMemo(() => lesson ? buildLessonViewerContent(lesson) : null, [lesson]);
     const curriculum = getLanguageCurriculum(languageId);
 
-    // Check if lesson exists in studyCategories (even if not in curriculum)
     const lessonInStudyCategories = useMemo(() => {
         const langConfig = getConfig(languageId);
         if (!langConfig?.studyCategories) return false;
         for (const category of langConfig.studyCategories) {
-            if (category.lessons?.some(l => l.id === lessonId)) {
-                return true;
-            }
+            if (category.lessons?.some(l => l.id === lessonId)) return true;
         }
         return false;
     }, [languageId, lessonId]);
@@ -49,39 +44,28 @@ export default function LanguageLesson({ languageId, lessonId }) {
     const [progressState, setProgressState] = useState({ completed: [], lastLessonId: null, xp: 0 });
     const [lessonProgress, setLessonProgress] = useState(0);
     const [completionOpen, setCompletionOpen] = useState(false);
-    const [xpAwarded, setXpAwarded] = useState(0);
+    const [xpAwarded, setXpAwarded]           = useState(0);
 
     useEffect(() => {
         const stored = loadLanguageProgress(languageId);
         setProgressState(stored);
         setCompletionOpen(false);
         setXpAwarded(0);
-
         if (!lesson) return;
         if (!isLessonUnlocked(languageId, lesson.id, stored.completed)) return;
-
         setLastLesson(languageId, lesson.id);
-
-        if (stored.completed.includes(lesson.id)) {
-            setLessonProgress(100);
-            return;
-        }
-
-        const existing = 0; // Would need to implement partial progress tracking
-        const started = Math.max(existing, 20);
+        if (stored.completed.includes(lesson.id)) { setLessonProgress(100); return; }
+        const started = 20;
         setLessonPartialProgress(languageId, lesson.id, started);
         setLessonProgress(started);
     }, [languageId, lessonId, lesson]);
 
     const completed = progressState.completed.includes(lessonId);
 
-    const category = useMemo(
-        () => {
-            if (!lesson?.categoryId) return null;
-            return curriculum.find((item) => item.id === lesson.categoryId) ?? null;
-        },
-        [lesson, curriculum]
-    );
+    const category = useMemo(() => {
+        if (!lesson?.categoryId) return null;
+        return curriculum.find((item) => item.id === lesson.categoryId) ?? null;
+    }, [lesson, curriculum]);
 
     const categoryStats = useMemo(() => {
         if (!category) return { completed: 0, total: 0 };
@@ -101,33 +85,30 @@ export default function LanguageLesson({ languageId, lessonId }) {
     };
 
     if (!lesson || !content) {
-        // If lesson exists in studyCategories but not in curriculum, show "content being prepared"
         if (lessonInStudyCategories) {
             return (
                 <DashboardLayout>
-                    <Head title="Lesson Content Being Prepared" />
-                    <LanguageHeader languageId={languageId} currentSection="study" />
+                    <Head title={t('study.contentPreparing')} />
+                    <LanguageHeader languageId={languageId} />
                     <Card className="p-8 text-center">
-                        <h1 className="text-2xl font-bold mb-2">Lesson content is being prepared</h1>
-                        <p className="text-gray-400 mb-6">This lesson is part of the {config.name} curriculum, but detailed content is still being developed.</p>
+                        <h1 className="text-2xl font-bold mb-2">{t('study.contentPreparing')}</h1>
+                        <p className="text-gray-400 mb-6">{t('study.contentPreparingDesc')}</p>
                         <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study`)}>
-                            Back to Study
+                            {t('buttons.backToStudy')}
                         </Button>
                     </Card>
                 </DashboardLayout>
             );
         }
-
-        // Lesson doesn't exist anywhere - show "Lesson not found"
         return (
             <DashboardLayout>
-                <Head title="Lesson not found" />
-                <LanguageHeader languageId={languageId} currentSection="study" />
+                <Head title={t('study.lessonNotFound')} />
+                <LanguageHeader languageId={languageId} />
                 <Card className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-2">Lesson not found</h1>
-                    <p className="text-gray-400 mb-6">This lesson does not exist in the {config.name} curriculum.</p>
+                    <h1 className="text-2xl font-bold mb-2">{t('study.lessonNotFound')}</h1>
+                    <p className="text-gray-400 mb-6">{t('study.lessonNotFoundDesc')}</p>
                     <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study`)}>
-                        Back to Study
+                        {t('buttons.backToStudy')}
                     </Button>
                 </Card>
             </DashboardLayout>
@@ -139,24 +120,22 @@ export default function LanguageLesson({ languageId, lessonId }) {
     if (!unlocked) {
         return (
             <DashboardLayout>
-                <Head title={`${lesson.title} · Locked`} />
-                <LanguageHeader languageId={languageId} currentSection="study" />
+                <Head title={`${lesson.title} · ${t('stats.locked')}`} />
+                <LanguageHeader languageId={languageId} />
                 <Card className="p-8 text-center">
                     <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
                         <Lock className="w-7 h-7 text-gray-400" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">{lesson.title} is locked</h1>
-                    <p className="text-gray-400 mb-6">
-                        Complete the previous lesson before starting this one.
-                    </p>
+                    <h1 className="text-2xl font-bold mb-2">{lesson.title} {t('study.lessonLocked')}</h1>
+                    <p className="text-gray-400 mb-6">{t('study.lessonLockedDesc')}</p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         {previous && (
                             <Button variant="primary" onClick={() => router.visit(`/languages/${languageId}/study/${previous.id}`)}>
-                                Go to Previous Lesson
+                                {t('study.previousLesson')}
                             </Button>
                         )}
                         <Button variant="outline" onClick={() => router.visit(`/languages/${languageId}/study`)}>
-                            Back to Study
+                            {t('buttons.backToStudy')}
                         </Button>
                     </div>
                 </Card>
@@ -181,8 +160,8 @@ export default function LanguageLesson({ languageId, lessonId }) {
 
     return (
         <DashboardLayout>
-            <Head title={`${lesson.title} · ${config.name} Study`} />
-            <LanguageHeader languageId={languageId} currentSection="study" />
+            <Head title={`${lesson.title} · ${config.name} ${t('sections.study')}`} />
+            <LanguageHeader languageId={languageId} />
 
             <LessonHeader
                 title={lesson.title}
@@ -206,24 +185,15 @@ export default function LanguageLesson({ languageId, lessonId }) {
                     <LessonExplanation paragraphs={content.explanation} />
                     <LessonExamples examples={content.examples} />
                     <LessonPronunciation items={content.pronunciation} languageId={languageId} />
-                    <LessonAudio clips={content.audioClips} title="Native Audio Player" languageId={languageId} />
+                    <LessonAudio clips={content.audioClips} title={t('study.nativeAudioPlayer')} languageId={languageId} />
                     <VocabularyCard items={content.vocabulary} languageId={languageId} />
                     <LessonSentences items={content.sentences} />
                     <LessonGrammarNotes notes={content.grammarNotes} />
-                    <LessonInteractiveExamples
-                        items={content.interactive}
-                        onInteract={handleInteractive}
-                        languageId={languageId}
-                    />
+                    <LessonInteractiveExamples items={content.interactive} onInteract={handleInteractive} languageId={languageId} />
                     <LessonMedia media={content.media} />
                 </section>
 
-                <LessonNavigation
-                    previous={previous}
-                    next={next}
-                    completed={completed}
-                    onMarkComplete={handleMarkComplete}
-                />
+                <LessonNavigation previous={previous} next={next} completed={completed} onMarkComplete={handleMarkComplete} />
             </div>
 
             <LessonCompletionOverlay

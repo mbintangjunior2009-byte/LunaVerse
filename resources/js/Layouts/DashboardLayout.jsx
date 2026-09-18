@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard, Languages, BookOpen,
     Brain, Trophy, Target, Calendar, Sparkles, LogOut,
@@ -8,44 +9,35 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/Components/ui/Button';
+import LanguageSwitcher from '@/Components/LanguageSwitcher';
 
-const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Languages', href: '/languages', icon: Languages },
-    { name: 'Practice', href: '/practice', icon: BookOpen },
-    { name: 'Vocabulary', href: '/vocabulary', icon: Brain },
-    { name: 'Achievements', href: '/achievements', icon: Trophy },
-    { name: 'Progress', href: '/progress', icon: Target },
-    { name: 'Calendar', href: '/calendar', icon: Calendar },
+// Nav item keys map to translation keys in nav.* namespace
+const NAV_ITEMS = [
+    { key: 'dashboard',    href: '/dashboard',    icon: LayoutDashboard },
+    { key: 'languages',    href: '/languages',    icon: Languages },
+    { key: 'practice',     href: '/practice',     icon: BookOpen },
+    { key: 'vocabulary',   href: '/vocabulary',   icon: Brain },
+    { key: 'achievements', href: '/achievements', icon: Trophy },
+    { key: 'progress',     href: '/progress',     icon: Target },
+    { key: 'calendar',     href: '/calendar',     icon: Calendar },
 ];
 
-const searchCatalog = [
-    ...navItems.map((item) => ({ label: item.name, href: item.href, type: 'Page' })),
-    { label: 'Settings', href: '/settings', type: 'Page' },
-    { label: 'Profile', href: '/profile', type: 'Page' },
+const SEARCH_CATALOG_BASE = [
+    ...NAV_ITEMS.map((item) => ({ labelKey: item.key, href: item.href, type: 'Page' })),
+    { labelKey: 'settings', href: '/settings', type: 'Page' },
+    { labelKey: 'profile',  href: '/profile',  type: 'Page' },
     { label: 'Japanese', href: '/languages/japanese', type: 'Language' },
-    { label: 'Chinese', href: '/languages/chinese', type: 'Language' },
-    { label: 'Korean', href: '/languages/korean', type: 'Language' },
-    { label: 'English', href: '/languages/english', type: 'Language' },
-    { label: 'Spanish', href: '/languages/spanish', type: 'Language' },
-];
-
-const notifications = [
-    { id: 1, title: 'Streak reminder', body: 'Keep your 14-day streak alive today.', href: '/calendar', time: '2m ago' },
-    { id: 2, title: 'New vocabulary set', body: '20 JLPT N5 words are ready to review.', href: '/vocabulary', time: '1h ago' },
-    { id: 3, title: 'Practice suggestion', body: 'Try an AI conversation session.', href: '/practice', time: 'Yesterday' },
+    { label: 'Chinese',  href: '/languages/chinese',  type: 'Language' },
+    { label: 'Korean',   href: '/languages/korean',   type: 'Language' },
+    { label: 'English',  href: '/languages/english',  type: 'Language' },
+    { label: 'Spanish',  href: '/languages/spanish',  type: 'Language' },
 ];
 
 function isActivePath(currentUrl, href) {
     const path = currentUrl.split('?')[0];
     const hrefPath = href.split('?')[0];
-    
-    if (hrefPath === '/dashboard') {
-        return path === hrefPath;
-    }
-    if (hrefPath === '/languages') {
-        return path === hrefPath || path.startsWith('/languages/');
-    }
+    if (hrefPath === '/dashboard') return path === hrefPath;
+    if (hrefPath === '/languages')  return path === hrefPath || path.startsWith('/languages/');
     return path === hrefPath || path.startsWith(`${hrefPath}/`);
 }
 
@@ -53,34 +45,54 @@ export default function DashboardLayout({ children }) {
     const { auth } = usePage().props;
     const currentUrl = usePage().url;
     const user = auth.user;
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchOpen, setSearchOpen] = useState(false);
-    const [notifOpen, setNotifOpen] = useState(false);
-    const [profileOpen, setProfileOpen] = useState(false);
-    const searchRef = useRef(null);
-    const notifRef = useRef(null);
+    const { t } = useTranslation();
+
+    const [sidebarOpen, setSidebarOpen]   = useState(false);
+    const [searchQuery, setSearchQuery]   = useState('');
+    const [searchOpen, setSearchOpen]     = useState(false);
+    const [notifOpen, setNotifOpen]       = useState(false);
+    const [profileOpen, setProfileOpen]   = useState(false);
+    const searchRef  = useRef(null);
+    const notifRef   = useRef(null);
     const profileRef = useRef(null);
 
-    const searchResults = useMemo(() => {
+    // Build translated notifications each render so they respond to locale changes
+    const notifications = [
+        { id: 1, title: t('notifications.streakReminder'),    body: t('notifications.streakBody'),   href: '/calendar',    time: '2m ago' },
+        { id: 2, title: t('notifications.vocabSet'),           body: t('notifications.vocabBody'),    href: '/vocabulary',  time: '1h ago' },
+        { id: 3, title: t('notifications.practiceSuggestion'), body: t('notifications.practiceBody'), href: '/practice',    time: t('common.yesterday') },
+    ];
+
+    // Build translated search catalog
+    const searchCatalog = useMemo(() => {
+        const base = SEARCH_CATALOG_BASE.map((item) =>
+            item.labelKey
+                ? { ...item, label: t(`nav.${item.labelKey}`) }
+                : item
+        );
         const adminEntries = user?.role === 'admin' ? [
             { label: 'Admin Dashboard', href: '/admin/dashboard', type: 'Admin' },
-            { label: 'User Management', href: '/admin/users', type: 'Admin' },
-            { label: 'Site Settings', href: '/admin/settings', type: 'Admin' },
+            { label: 'User Management', href: '/admin/users',     type: 'Admin' },
+            { label: 'Site Settings',   href: '/admin/settings',  type: 'Admin' },
         ] : [];
-        const catalog = [...searchCatalog, ...adminEntries];
+        return [...base, ...adminEntries];
+    }, [t, user?.role]);
+
+    const searchResults = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
-        if (!q) return catalog.slice(0, 6);
-        return catalog.filter((item) =>
-            item.label.toLowerCase().includes(q) || item.type.toLowerCase().includes(q)
-        ).slice(0, 8);
-    }, [searchQuery, user?.role]);
+        if (!q) return searchCatalog.slice(0, 6);
+        return searchCatalog
+            .filter((item) =>
+                item.label.toLowerCase().includes(q) || item.type.toLowerCase().includes(q)
+            )
+            .slice(0, 8);
+    }, [searchQuery, searchCatalog]);
 
     useEffect(() => {
-        const onPointerDown = (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target)) setSearchOpen(false);
-            if (notifRef.current && !notifRef.current.contains(event.target)) setNotifOpen(false);
-            if (profileRef.current && !profileRef.current.contains(event.target)) setProfileOpen(false);
+        const onPointerDown = (e) => {
+            if (searchRef.current  && !searchRef.current.contains(e.target))  setSearchOpen(false);
+            if (notifRef.current   && !notifRef.current.contains(e.target))   setNotifOpen(false);
+            if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
         };
         document.addEventListener('mousedown', onPointerDown);
         return () => document.removeEventListener('mousedown', onPointerDown);
@@ -95,32 +107,35 @@ export default function DashboardLayout({ children }) {
         router.visit(href);
     };
 
-    const submitSearch = (event) => {
-        event.preventDefault();
-        if (searchResults[0]) {
-            goTo(searchResults[0].href);
-        }
+    const submitSearch = (e) => {
+        e.preventDefault();
+        if (searchResults[0]) goTo(searchResults[0].href);
     };
 
     return (
         <div className="min-h-screen bg-dark-900 text-white flex flex-col md:flex-row font-sans">
-            {/* Top Navbar for Mobile */}
+
+            {/* ── Mobile top bar ── */}
             <div className="md:hidden flex items-center justify-between p-4 border-b border-white/5 bg-dark-900/80 backdrop-blur-md sticky top-0 z-50">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-700 to-brand-300 flex items-center justify-center">
                         <span className="font-bold text-white">L</span>
                     </div>
                 </div>
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2">
-                    {sidebarOpen ? <X /> : <Menu />}
-                </button>
+                <div className="flex items-center gap-2">
+                    <LanguageSwitcher variant="dark" />
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2">
+                        {sidebarOpen ? <X /> : <Menu />}
+                    </button>
+                </div>
             </div>
 
-            {/* Sidebar */}
+            {/* ── Sidebar ── */}
             <aside className={cn(
                 "fixed inset-y-0 left-0 z-40 w-72 bg-dark-800/50 backdrop-blur-xl border-r border-white/5 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col",
                 sidebarOpen ? "translate-x-0" : "-translate-x-full"
             )}>
+                {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-white/5 hidden md:flex">
                     <Link href="/" className="flex items-center gap-2 group">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-700 to-brand-300 flex items-center justify-center">
@@ -130,6 +145,7 @@ export default function DashboardLayout({ children }) {
                     </Link>
                 </div>
 
+                {/* User card */}
                 <div className="p-6 border-b border-white/5">
                     <Link href="/profile" className="flex items-center gap-4 mb-4 hover:opacity-90 transition-opacity">
                         <div className="w-12 h-12 rounded-full bg-brand-500/20 border border-brand-500/50 flex items-center justify-center overflow-hidden">
@@ -145,7 +161,7 @@ export default function DashboardLayout({ children }) {
                     </div>
                     <div className="flex items-center justify-between text-xs font-medium">
                         <div className="flex items-center gap-1 text-orange-400">
-                            <Flame className="w-4 h-4" /> 14 Day Streak
+                            <Flame className="w-4 h-4" /> 14 {t('sidebar.streak')}
                         </div>
                         <div className="flex items-center gap-1 text-yellow-400">
                             <Coins className="w-4 h-4" /> 320
@@ -153,6 +169,7 @@ export default function DashboardLayout({ children }) {
                     </div>
                 </div>
 
+                {/* Nav links */}
                 <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
                     {user?.role === 'admin' && (
                         <Link
@@ -167,7 +184,7 @@ export default function DashboardLayout({ children }) {
                         >
                             <div className="flex items-center gap-3">
                                 <Shield className="w-5 h-5 text-purple-400" />
-                                <span>Admin Panel</span>
+                                <span>{t('nav.adminPanel')}</span>
                             </div>
                             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/40">
                                 Admin
@@ -175,11 +192,11 @@ export default function DashboardLayout({ children }) {
                         </Link>
                     )}
 
-                    {navItems.map((item) => {
+                    {NAV_ITEMS.map((item) => {
                         const active = isActivePath(currentUrl, item.href);
                         return (
                             <Link
-                                key={item.name}
+                                key={item.key}
                                 href={item.href}
                                 onClick={() => setSidebarOpen(false)}
                                 className={cn(
@@ -190,7 +207,7 @@ export default function DashboardLayout({ children }) {
                                 )}
                             >
                                 <item.icon className="w-5 h-5" />
-                                {item.name}
+                                {t(`nav.${item.key}`)}
                             </Link>
                         );
                     })}
@@ -206,7 +223,7 @@ export default function DashboardLayout({ children }) {
                                     : "text-gray-400 hover:bg-white/5 hover:text-white"
                             )}
                         >
-                            <Settings className="w-5 h-5" /> Settings
+                            <Settings className="w-5 h-5" /> {t('nav.settings')}
                         </Link>
                         <Link
                             href={route('logout')}
@@ -214,46 +231,53 @@ export default function DashboardLayout({ children }) {
                             as="button"
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
                         >
-                            <LogOut className="w-5 h-5" /> Logout
+                            <LogOut className="w-5 h-5" /> {t('nav.logout')}
                         </Link>
                     </div>
                 </div>
 
+                {/* Premium CTA */}
                 <div className="p-4 m-4 rounded-xl bg-gradient-to-br from-brand-700/40 to-brand-900/40 border border-brand-500/30 relative overflow-hidden">
                     <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-2">
                             <Sparkles className="w-4 h-4 text-brand-300" />
-                            <h4 className="font-bold text-sm">Go Premium</h4>
+                            <h4 className="font-bold text-sm">{t('sidebar.goPremium')}</h4>
                         </div>
-                        <p className="text-xs text-gray-300 mb-3">Unlock unlimited AI tutoring.</p>
+                        <p className="text-xs text-gray-300 mb-3">{t('sidebar.premiumDesc')}</p>
                         <Link href="/pricing">
-                            <Button variant="primary" size="sm" className="w-full text-xs h-8">Upgrade Now</Button>
+                            <Button variant="primary" size="sm" className="w-full text-xs h-8">
+                                {t('buttons.upgrade')}
+                            </Button>
                         </Link>
                     </div>
                 </div>
             </aside>
 
+            {/* ── Main ── */}
             <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+
+                {/* Desktop header */}
                 <header className="hidden md:flex h-20 items-center justify-between px-8 border-b border-white/5 bg-dark-900/50 backdrop-blur-sm shrink-0">
+
+                    {/* Search */}
                     <div className="flex-1 max-w-md relative" ref={searchRef}>
                         <form onSubmit={submitSearch}>
                             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                             <input
                                 type="text"
                                 value={searchQuery}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value);
-                                    setSearchOpen(true);
-                                }}
+                                onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
                                 onFocus={() => setSearchOpen(true)}
-                                placeholder="Search courses, vocabulary..."
+                                placeholder={t('search.placeholder')}
                                 className="w-full h-10 bg-white/5 border border-white/10 rounded-full pl-10 pr-4 text-sm focus:outline-none focus:border-brand-500 transition-colors"
                             />
                         </form>
                         {searchOpen && (
                             <div className="absolute top-12 left-0 right-0 z-50 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
                                 {searchResults.length === 0 ? (
-                                    <p className="px-4 py-3 text-sm text-gray-400">No results for “{searchQuery}”.</p>
+                                    <p className="px-4 py-3 text-sm text-gray-400">
+                                        {t('search.noResults')} "{searchQuery}".
+                                    </p>
                                 ) : (
                                     searchResults.map((item) => (
                                         <button
@@ -274,14 +298,17 @@ export default function DashboardLayout({ children }) {
                         )}
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    {/* Right controls */}
+                    <div className="flex items-center gap-3">
+
+                        {/* Language switcher */}
+                        <LanguageSwitcher variant="dark" />
+
+                        {/* Notifications */}
                         <div className="relative" ref={notifRef}>
                             <button
                                 type="button"
-                                onClick={() => {
-                                    setNotifOpen((open) => !open);
-                                    setProfileOpen(false);
-                                }}
+                                onClick={() => { setNotifOpen((o) => !o); setProfileOpen(false); }}
                                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors relative"
                             >
                                 <Bell className="w-5 h-5 text-gray-300" />
@@ -290,8 +317,10 @@ export default function DashboardLayout({ children }) {
                             {notifOpen && (
                                 <div className="absolute right-0 mt-3 w-80 rounded-xl bg-dark-800/95 backdrop-blur-xl border border-white/10 shadow-2xl z-50 overflow-hidden">
                                     <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
-                                        <h4 className="font-bold text-sm">Notifications</h4>
-                                        <span className="text-xs text-brand-300">{notifications.length} new</span>
+                                        <h4 className="font-bold text-sm">{t('notifications.title')}</h4>
+                                        <span className="text-xs text-brand-300">
+                                            {notifications.length} {t('notifications.new')}
+                                        </span>
                                     </div>
                                     <div className="max-h-80 overflow-y-auto">
                                         {notifications.map((item) => (
@@ -311,13 +340,11 @@ export default function DashboardLayout({ children }) {
                             )}
                         </div>
 
+                        {/* Profile dropdown */}
                         <div className="relative" ref={profileRef}>
                             <button
                                 type="button"
-                                onClick={() => {
-                                    setProfileOpen((open) => !open);
-                                    setNotifOpen(false);
-                                }}
+                                onClick={() => { setProfileOpen((o) => !o); setNotifOpen(false); }}
                                 className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                             >
                                 <div className="w-10 h-10 rounded-full bg-brand-500/20 border border-brand-500/50 flex items-center justify-center overflow-hidden">
@@ -332,7 +359,8 @@ export default function DashboardLayout({ children }) {
                                             onClick={() => goTo('/admin/dashboard')}
                                             className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-purple-300 hover:bg-purple-500/15 font-semibold border-b border-white/5"
                                         >
-                                            <Shield className="w-4 h-4 text-purple-400" /> Admin Panel
+                                            <Shield className="w-4 h-4 text-purple-400" />
+                                            {t('nav.adminPanel')}
                                         </button>
                                     )}
                                     <button
@@ -340,14 +368,14 @@ export default function DashboardLayout({ children }) {
                                         onClick={() => goTo('/profile')}
                                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-200 hover:bg-white/5"
                                     >
-                                        <UserIcon className="w-4 h-4 text-brand-300" /> View Profile
+                                        <UserIcon className="w-4 h-4 text-brand-300" /> {t('nav.profile')}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => goTo('/settings')}
                                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-200 hover:bg-white/5"
                                     >
-                                        <Settings className="w-4 h-4 text-brand-300" /> Settings
+                                        <Settings className="w-4 h-4 text-brand-300" /> {t('nav.settings')}
                                     </button>
                                     <div className="my-1 border-t border-white/5" />
                                     <Link
@@ -356,7 +384,7 @@ export default function DashboardLayout({ children }) {
                                         as="button"
                                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10"
                                     >
-                                        <LogOut className="w-4 h-4" /> Logout
+                                        <LogOut className="w-4 h-4" /> {t('nav.logout')}
                                     </Link>
                                 </div>
                             )}
@@ -364,6 +392,7 @@ export default function DashboardLayout({ children }) {
                     </div>
                 </header>
 
+                {/* Page content */}
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
                     <div className="absolute top-[0%] right-[0%] w-[50%] h-[50%] bg-brand-500/5 rounded-full blur-[100px] pointer-events-none" />
                     <div className="relative z-10 max-w-6xl mx-auto">

@@ -1,39 +1,38 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { getLanguageConfig } from '@/data/languageConfig';
 import { loadLanguageProgress } from '@/lib/languageProgress';
 import LanguageHeader from '@/Components/language/LanguageHeader';
-import LessonCard from '@/Components/language/LessonCard';
 import { Card } from '@/Components/ui/Card';
 import { BookOpen, Clock, Signal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/**
- * Dynamic Language Study Page
- * Works for any supported language
- */
 export default function LanguageStudy({ languageId }) {
-    const config = getLanguageConfig(languageId);
+    const { t } = useTranslation();
+    const config   = getLanguageConfig(languageId);
     const progress = loadLanguageProgress(languageId);
 
     return (
         <DashboardLayout>
-            <Head title={`${config.name} - Study`} />
+            <Head title={`${config.name} - ${t('sections.study')}`} />
 
-            <LanguageHeader languageId={languageId} currentSection="study" />
+            <LanguageHeader languageId={languageId} />
 
             <div className="mb-8">
-                <h1 className="text-2xl font-bold mb-2">Study Lessons</h1>
-                <p className="text-gray-400">Master {config.name} step by step with structured lessons.</p>
+                <h1 className="text-2xl font-bold mb-2">{t('language.studyLessons')}</h1>
+                <p className="text-gray-400">{t('language.studyDesc', { name: config.name })}</p>
             </div>
 
             {config.studyCategories.map((category) => {
-                const categoryLessons = category.lessons || [];
+                const categoryLessons   = category.lessons || [];
                 const categoryCompleted = categoryLessons.filter((lesson) =>
                     progress.completed.includes(lesson.id)
                 ).length;
-                const categoryProgress = categoryLessons.length > 0 ? Math.round((categoryCompleted / categoryLessons.length) * 100) : 0;
+                const categoryProgress  = categoryLessons.length > 0
+                    ? Math.round((categoryCompleted / categoryLessons.length) * 100)
+                    : 0;
 
                 return (
                     <div key={category.id} className="mb-8">
@@ -50,16 +49,15 @@ export default function LanguageStudy({ languageId }) {
                                 </div>
                                 <div className="text-right">
                                     <p className="text-2xl font-bold">{categoryProgress}%</p>
-                                    <p className="text-xs text-gray-400">{categoryCompleted}/{categoryLessons.length} lessons</p>
+                                    <p className="text-xs text-gray-400">
+                                        {categoryCompleted}/{categoryLessons.length} {t('sections.lessons').toLowerCase()}
+                                    </p>
                                 </div>
                             </div>
                             <div className="mt-3 w-full h-2 bg-white/10 rounded-full overflow-hidden">
                                 <div
                                     className="h-full rounded-full transition-all duration-300"
-                                    style={{
-                                        width: `${categoryProgress}%`,
-                                        backgroundColor: config.themeColor
-                                    }}
+                                    style={{ width: `${categoryProgress}%`, backgroundColor: config.themeColor }}
                                 />
                             </div>
                         </Card>
@@ -68,8 +66,8 @@ export default function LanguageStudy({ languageId }) {
                             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {categoryLessons.map((lesson, index) => {
                                     const isCompleted = progress.completed.includes(lesson.id);
-                                    const isUnlocked = index === 0 || progress.completed.includes(categoryLessons[index - 1].id);
-                                    const lessonProgress = isCompleted ? 100 : isUnlocked ? 0 : 0;
+                                    const isUnlocked  = index === 0 || progress.completed.includes(categoryLessons[index - 1].id);
+                                    const lessonProgress = isCompleted ? 100 : 0;
 
                                     return (
                                         <Link key={lesson.id} href={`/languages/${languageId}/study/${lesson.id}`} className="block">
@@ -111,10 +109,11 @@ export default function LanguageStudy({ languageId }) {
                                                     </div>
                                                     <span className={cn(
                                                         'text-xs font-medium px-2 py-1 rounded-full',
-                                                        isCompleted ? 'text-emerald-300 bg-emerald-500/10' :
-                                                            isUnlocked ? 'text-brand-300 bg-brand-500/10' : 'text-gray-400 bg-white/5'
+                                                        isCompleted  ? 'text-emerald-300 bg-emerald-500/10' :
+                                                        isUnlocked   ? 'text-brand-300 bg-brand-500/10' :
+                                                                       'text-gray-400 bg-white/5'
                                                     )}>
-                                                        {isCompleted ? 'Completed' : isUnlocked ? 'Continue' : 'Locked'}
+                                                        {isCompleted ? t('stats.completed') : isUnlocked ? t('study.continueStatus') : t('stats.locked')}
                                                     </span>
                                                 </div>
                                             </Card>
@@ -125,7 +124,7 @@ export default function LanguageStudy({ languageId }) {
                         ) : (
                             <Card className="p-8 text-center border-dashed border-white/20">
                                 <BookOpen className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-                                <p className="text-gray-400">Lessons coming soon</p>
+                                <p className="text-gray-400">{t('study.lessonsComingSoon')}</p>
                             </Card>
                         )}
                     </div>

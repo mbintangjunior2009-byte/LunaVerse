@@ -1,28 +1,30 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { TrendingUp, Lock, Target, Zap, ChevronRight } from 'lucide-react';
 import { Card } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
 import { cn } from '@/lib/utils';
 
-/**
- * Reusable Practice Card Component
- * Displays a practice quiz or exercise for any language
- */
 export default function PracticeCard({
     languageId,
     category,
-    status = 'available',
-    score = null,
+    status       = 'available',
+    score        = null,
     questionCount = 10,
     onClick
 }) {
-    const isLocked = status === 'locked';
+    const { t }       = useTranslation();
+    const isLocked    = status === 'locked';
     const isCompleted = status === 'completed';
-    const questions = category.questions || questionCount;
-    const xpReward = category.xpReward || 50;
-    const difficulty = category.difficulty || 'Beginner';
+    const questions   = category.questions || questionCount;
+    const xpReward    = category.xpReward || 50;
+    const difficulty  = category.difficulty || 'Beginner';
+
+    // Map difficulty string to translation key
+    const difficultyKey = { Beginner: 'beginner', Intermediate: 'intermediate', Advanced: 'advanced' };
+    const difficultyLabel = difficultyKey[difficulty] ? t(`levels.${difficultyKey[difficulty]}`) : difficulty;
 
     const body = (
         <motion.div
@@ -41,7 +43,7 @@ export default function PracticeCard({
                     <div className={cn(
                         'w-12 h-12 rounded-xl flex items-center justify-center text-2xl border',
                         isCompleted && 'bg-emerald-500/15 border-emerald-500/30',
-                        isLocked && 'bg-white/5 border-white/10',
+                        isLocked    && 'bg-white/5 border-white/10',
                         !isCompleted && !isLocked && 'bg-brand-500/15 border-brand-500/30'
                     )}>
                         {category.icon}
@@ -54,7 +56,7 @@ export default function PracticeCard({
                 <div className={cn(
                     'w-10 h-10 rounded-xl flex items-center justify-center border shrink-0',
                     isCompleted && 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-                    isLocked && 'bg-white/5 border-white/10 text-gray-500',
+                    isLocked    && 'bg-white/5 border-white/10 text-gray-500',
                     !isCompleted && !isLocked && 'bg-brand-500/15 border-brand-500/30 text-brand-300'
                 )}>
                     {isCompleted ? (
@@ -70,18 +72,18 @@ export default function PracticeCard({
             <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
                 <span className="inline-flex items-center gap-1">
                     <Target className="w-3.5 h-3.5" />
-                    {questions} questions
+                    {questions} {t('common.questions')}
                 </span>
                 <span className="inline-flex items-center gap-1 text-brand-300">
                     <Zap className="w-3.5 h-3.5" />
-                    {xpReward} XP
+                    {xpReward} {t('common.xpSuffix')}
                 </span>
                 {isCompleted && score && (
                     <span className={cn(
                         'inline-flex items-center gap-1',
                         score >= 80 ? 'text-emerald-300' : score >= 60 ? 'text-yellow-300' : 'text-red-300'
                     )}>
-                        Best: {score}%
+                        {t('stats.bestScore')}: {score}%
                     </span>
                 )}
             </div>
@@ -90,31 +92,25 @@ export default function PracticeCard({
                 <span className={cn(
                     'text-xs font-medium px-2.5 py-1 rounded-full border',
                     isCompleted && 'text-emerald-300 bg-emerald-500/10 border-emerald-500/20',
-                    isLocked && 'text-gray-400 bg-white/5 border-white/10',
+                    isLocked    && 'text-gray-400 bg-white/5 border-white/10',
                     !isCompleted && !isLocked && 'text-brand-300 bg-brand-500/10 border-brand-500/20'
                 )}>
-                    {isCompleted ? 'Completed' : isLocked ? 'Locked' : difficulty}
+                    {isCompleted ? t('stats.completed') : isLocked ? t('stats.locked') : difficultyLabel}
                 </span>
 
                 {!isLocked && (
                     <Button variant="primary" size="sm" className="gap-1 pointer-events-none">
                         <TrendingUp className="w-3.5 h-3.5" />
-                        Play
+                        {t('buttons.play')}
                     </Button>
                 )}
             </div>
         </motion.div>
     );
 
-    if (isLocked) {
-        return <div className="h-full">{body}</div>;
-    }
+    if (isLocked) return <div className="h-full">{body}</div>;
+    if (onClick)  return <div className="h-full cursor-pointer" onClick={onClick}>{body}</div>;
 
-    if (onClick) {
-        return <div className="h-full cursor-pointer" onClick={onClick}>{body}</div>;
-    }
-
-    // Only render Link if no onClick handler and not locked
     return (
         <Link href={`/languages/${languageId}/practice/${category.id}`} className="block h-full">
             {body}
