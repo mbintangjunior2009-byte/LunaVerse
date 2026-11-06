@@ -8,7 +8,7 @@ import { Trophy, ListTree, Zap, ArrowRight, BookOpen } from 'lucide-react';
 export default function Features({ auth }) {
     return (
         <PublicLayout auth={auth}>
-            <Head title="Features - LinguaNova" />
+            <Head title="Features - Lunavera Language" />
             
             <section className="py-24 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">

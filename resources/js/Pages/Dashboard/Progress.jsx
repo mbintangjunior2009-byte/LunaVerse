@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Card } from '@/Components/ui/Card';
@@ -10,14 +10,18 @@ import { getTotalLessonCount } from '@/data/languageCurriculum';
 
 export default function Progress() {
     const { t } = useTranslation();
+    const { progress } = usePage().props;
     const languages = getAllLanguages();
 
+    const userStreak   = progress?.streak ?? 0;
+    const userLessons  = progress?.completed_lessons ?? 0;
+
     const languagesWithProgress = languages.map((lang) => {
-        const progress        = loadLanguageProgress(lang.id);
-        const totalLessons    = getTotalLessonCount(lang.id);
-        const completedLessons = progress.completed.length;
-        const progressPercent  = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-        return { ...lang, progress: progressPercent, xp: progress.xp || 0, goal: t('dashboard.goalLabel') + ' 5 lessons / week' };
+        const langProgress       = loadLanguageProgress(lang.id);
+        const totalLessons       = getTotalLessonCount(lang.id);
+        const completedLessons   = langProgress.completed.length;
+        const progressPercent    = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        return { ...lang, progress: progressPercent, xp: langProgress.xp || 0, goal: t('dashboard.goalLabel') + ' 5 lessons / week' };
     });
 
     const totalXP = languagesWithProgress.reduce((sum, lang) => sum + lang.xp, 0);
@@ -46,11 +50,11 @@ export default function Progress() {
                 </Card>
                 <Card>
                     <p className="text-sm text-gray-400 mb-1">{t('stats.weeklyStreak')}</p>
-                    <p className="text-3xl font-bold">14 {t('common.days')}</p>
+                    <p className="text-3xl font-bold">{userStreak} {t('common.days')}</p>
                 </Card>
                 <Card>
                     <p className="text-sm text-gray-400 mb-1">{t('stats.lessonsThisWeek')}</p>
-                    <p className="text-3xl font-bold">3 / 5</p>
+                    <p className="text-3xl font-bold">{userLessons} / 5</p>
                 </Card>
             </div>
 

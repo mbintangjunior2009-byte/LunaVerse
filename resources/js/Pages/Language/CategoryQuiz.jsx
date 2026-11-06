@@ -119,6 +119,11 @@ export default function CategoryQuiz({ languageId, category }) {
         setIsSubmitting(true);
         router.post('/practice/submit', { category, score, completed: passed }, {
             preserveState: true,
+            onSuccess: () => {
+                // Submission succeeded — the controller returns a redirect
+                // with flash data. No action needed here; the result screen
+                // already shows the score and XP from local state.
+            },
             onFinish: () => setIsSubmitting(false),
         });
     }, [category, score, passed, isSubmitting]);

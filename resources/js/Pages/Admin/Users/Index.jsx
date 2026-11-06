@@ -87,7 +87,7 @@ export default function UsersIndex({ users, filters, currentAdminId }) {
 
     return (
         <AdminLayout>
-            <Head title="User Management - LinguaNova Admin" />
+            <Head title="User Management - Lunavera Language Admin" />
 
             {/* Page Title & Stats Bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

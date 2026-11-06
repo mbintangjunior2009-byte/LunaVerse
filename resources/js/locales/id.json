@@ -29,7 +29,6 @@
     "submit": "Kirim",
     "review": "Tinjau",
     "play": "Mainkan",
-    "upgrade": "Tingkatkan Sekarang",
     "viewAll": "Lihat Semua",
     "markComplete": "Tandai Selesai",
     "startQuiz": "Mulai Kuis",
@@ -114,8 +113,6 @@
     "practiceBody": "Coba sesi percakapan AI."
   },
   "sidebar": {
-    "goPremium": "Langganan Premium",
-    "premiumDesc": "Buka tutoring AI tanpa batas.",
     "streak": "Hari Berturut-turut"
   },
   "quiz": {

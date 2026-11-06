@@ -60,9 +60,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Progress');
     })->name('progress');
 
-    Route::get('/calendar', function () {
-        return Inertia::render('Dashboard/Calendar');
-    })->name('calendar');
+    Route::get('/calendar', [\App\Http\Controllers\CalendarController::class, 'index'])->name('calendar');
+    Route::post('/calendar/events', [\App\Http\Controllers\CalendarController::class, 'store'])->name('calendar.events.store');
+    Route::put('/calendar/events/{event}', [\App\Http\Controllers\CalendarController::class, 'update'])->name('calendar.events.update');
+    Route::delete('/calendar/events/{event}', [\App\Http\Controllers\CalendarController::class, 'destroy'])->name('calendar.events.destroy');
+    Route::patch('/calendar/events/{event}/toggle', [\App\Http\Controllers\CalendarController::class, 'toggle'])->name('calendar.events.toggle');
 
     Route::get('/settings', function () {
         return Inertia::render('Dashboard/Settings');

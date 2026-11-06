@@ -26,7 +26,7 @@ export default function Register() {
             
             <div className="mb-6 text-center">
                 <h2 className="text-2xl font-bold mb-2">Create an Account</h2>
-                <p className="text-sm text-gray-400">Join the LinguaNova community</p>
+                <p className="text-sm text-gray-400">Join the Lunavera Language community</p>
             </div>
 
             <form onSubmit={submit} className="space-y-4">

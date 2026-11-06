@@ -3,13 +3,14 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard, Languages, BookOpen,
-    Brain, Trophy, Target, Calendar, Sparkles, LogOut,
+    Brain, Trophy, Target, Calendar, LogOut,
     Search, Bell, User as UserIcon, Settings, Menu, X, Coins, Flame, ChevronRight,
     Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/Components/ui/Button';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
+import { clearAllLanguageProgress, setLastProgressUserId, getLastProgressUserId } from '@/lib/languageProgress';
 
 // Nav item keys map to translation keys in nav.* namespace
 const NAV_ITEMS = [
@@ -42,10 +43,22 @@ function isActivePath(currentUrl, href) {
 }
 
 export default function DashboardLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, progress } = usePage().props;
     const currentUrl = usePage().url;
     const user = auth.user;
     const { t } = useTranslation();
+
+    // Real stats from backend (HandleInertiaRequests), 0/1 fallbacks for new users
+    const userXP     = progress?.xp ?? 0;
+    const userLevel  = progress?.level ?? 1;
+    const userStreak = progress?.streak ?? 0;
+    const userLessons = progress?.completed_lessons ?? 0;
+
+    // Level progress bar — simple formula: xp within current level bracket
+    const xpForCurrentLevel = ((userLevel - 1) * 500);
+    const xpIntoLevel = userXP - xpForCurrentLevel;
+    const xpForNextLevel = 500;
+    const levelProgressPercent = Math.min(100, Math.max(0, Math.round((xpIntoLevel / xpForNextLevel) * 100)));
 
     const [sidebarOpen, setSidebarOpen]   = useState(false);
     const [searchQuery, setSearchQuery]   = useState('');
@@ -98,6 +111,18 @@ export default function DashboardLayout({ children }) {
         return () => document.removeEventListener('mousedown', onPointerDown);
     }, []);
 
+    // Detect user switch — if the authenticated user has changed since the
+    // last time progress was stored in localStorage, wipe all stale progress
+    // so the new user starts with a clean slate (0 XP, 0 lessons, 0%).
+    useEffect(() => {
+        if (!user?.id) return;
+        const lastUserId = getLastProgressUserId();
+        if (lastUserId && String(lastUserId) !== String(user.id)) {
+            clearAllLanguageProgress();
+        }
+        setLastProgressUserId(user.id);
+    }, [user?.id]);
+
     const goTo = (href) => {
         setSearchOpen(false);
         setNotifOpen(false);
@@ -145,7 +170,7 @@ export default function DashboardLayout({ children }) {
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-700 to-brand-300 flex items-center justify-center">
                             <span className="font-bold text-white">L</span>
                         </div>
-                        <span className="font-bold text-xl tracking-tight text-glow">LinguaNova</span>
+                        <span className="font-bold text-xl tracking-tight text-glow">Lunavera Language</span>
                     </Link>
                 </div>
 
@@ -157,18 +182,18 @@ export default function DashboardLayout({ children }) {
                         </div>
                         <div>
                             <h3 className="font-bold">{user.name}</h3>
-                            <p className="text-xs text-brand-300">Level 12 • 4,250 XP</p>
+                            <p className="text-xs text-brand-300">{t('stats.level')} {userLevel} • {userXP.toLocaleString()} {t('common.xpSuffix')}</p>
                         </div>
                     </Link>
                     <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-3">
-                        <div className="h-full bg-gradient-to-r from-brand-700 to-brand-300 w-[65%]" />
+                        <div className="h-full bg-gradient-to-r from-brand-700 to-brand-300 transition-all duration-500" style={{ width: `${levelProgressPercent}%` }} />
                     </div>
                     <div className="flex items-center justify-between text-xs font-medium">
                         <div className="flex items-center gap-1 text-orange-400">
-                            <Flame className="w-4 h-4" /> 14 {t('sidebar.streak')}
+                            <Flame className="w-4 h-4" /> {userStreak} {t('sidebar.streak')}
                         </div>
                         <div className="flex items-center gap-1 text-yellow-400">
-                            <Coins className="w-4 h-4" /> 320
+                            <Coins className="w-4 h-4" /> {userLessons}
                         </div>
                     </div>
                 </div>
@@ -236,22 +261,6 @@ export default function DashboardLayout({ children }) {
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
                         >
                             <LogOut className="w-5 h-5" /> {t('nav.logout')}
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Premium CTA */}
-                <div className="p-4 m-4 rounded-xl bg-gradient-to-br from-brand-700/40 to-brand-900/40 border border-brand-500/30 relative overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-4 h-4 text-brand-300" />
-                            <h4 className="font-bold text-sm">{t('sidebar.goPremium')}</h4>
-                        </div>
-                        <p className="text-xs text-gray-300 mb-3">{t('sidebar.premiumDesc')}</p>
-                        <Link href="/pricing">
-                            <Button variant="primary" size="sm" className="w-full text-xs h-8">
-                                {t('buttons.upgrade')}
-                            </Button>
                         </Link>
                     </div>
                 </div>

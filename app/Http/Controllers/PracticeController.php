@@ -103,10 +103,20 @@ class PracticeController extends Controller
 
         $progress->save();
 
-        return response()->json([
-            'success' => true,
-            'progress' => $progress,
-            'next_unlocked' => $progress->is_completed ? UserPracticeProgress::getNextCategory($category) : null,
+        // Return an Inertia-compatible redirect (NOT plain JSON).
+        // The frontend uses router.post() which expects a redirect response.
+        // Flash data carries the result so the page can display feedback if needed.
+        return redirect()->back()->with([
+            'status'        => 'Practice submitted!',
+            'practice_result' => [
+                'success'       => true,
+                'category'      => $category,
+                'score'         => $score,
+                'passed'        => $completed && $score >= $passThreshold,
+                'best_score'    => $progress->best_score,
+                'is_completed'  => $progress->is_completed,
+                'next_unlocked' => $progress->is_completed ? UserPracticeProgress::getNextCategory($category) : null,
+            ],
         ]);
     }
 

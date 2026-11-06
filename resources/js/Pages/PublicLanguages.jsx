@@ -7,7 +7,7 @@ import { Button } from '@/Components/ui/Button';
 export default function PublicLanguages({ auth }) {
     return (
         <PublicLayout auth={auth}>
-            <Head title="Languages - LinguaNova" />
+            <Head title="Languages - Lunavera Language" />
             
             <section className="py-24 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">

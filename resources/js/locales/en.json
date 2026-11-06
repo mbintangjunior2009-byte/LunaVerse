@@ -29,7 +29,6 @@
     "submit": "Submit",
     "review": "Review",
     "play": "Play",
-    "upgrade": "Upgrade Now",
     "viewAll": "View All",
     "markComplete": "Mark Complete",
     "startQuiz": "Start Quiz",
@@ -114,8 +113,6 @@
     "practiceBody": "Try an AI conversation session."
   },
   "sidebar": {
-    "goPremium": "Go Premium",
-    "premiumDesc": "Unlock unlimited AI tutoring.",
     "streak": "Day Streak"
   },
   "quiz": {

@@ -29,7 +29,7 @@ export default function PublicLayout({ children, auth }) {
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-700 to-brand-300 flex items-center justify-center shadow-[0_0_15px_rgba(185,95,255,0.5)] group-hover:shadow-[0_0_25px_rgba(185,95,255,0.7)] transition-all">
                             <span className="font-bold text-lg text-white">L</span>
                         </div>
-                        <span className="font-bold text-xl tracking-tight text-glow">LinguaNova</span>
+                        <span className="font-bold text-xl tracking-tight text-glow">Lunavera Language</span>
                     </Link>
 
                     {/* Nav links */}

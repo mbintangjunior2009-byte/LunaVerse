@@ -16,7 +16,7 @@ const calculateAchievementStatus = (progress, curriculum, achievements) => {
     const totalLessons     = curriculum.reduce((acc, cat) => acc + cat.lessons.length, 0);
     const overallProgress  = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
     const vocabularyLearned = completedLessons * 15;
-    const currentStreak     = Math.min(30, completedLessons + 5);
+    const currentStreak     = 0; // driven by backend, not inflated from lesson count
 
     return achievements.map((achievement) => {
         let unlocked = false;

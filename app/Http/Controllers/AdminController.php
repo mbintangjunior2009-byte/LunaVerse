@@ -27,7 +27,7 @@ class AdminController extends Controller
     protected function getDefaultSettings(): array
     {
         return [
-            'site_name' => 'LinguaNova',
+            'site_name' => 'Lunavera Language',
             'site_tagline' => 'Next-Gen Gamified Polyglot Learning Platform',
             'contact_email' => 'admin@linguanova.com',
             'allow_registration' => true,

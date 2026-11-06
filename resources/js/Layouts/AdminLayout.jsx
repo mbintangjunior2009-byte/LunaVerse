@@ -50,7 +50,7 @@ export default function AdminLayout({ children }) {
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-brand-400 flex items-center justify-center shadow-lg shadow-purple-500/20">
                         <Shield className="w-4 h-4 text-white" />
                     </div>
-                    <span className="font-bold text-lg text-white">LinguaNova</span>
+                    <span className="font-bold text-lg text-white">Lunavera Language</span>
                     <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                         Admin
                     </span>
@@ -77,7 +77,7 @@ export default function AdminLayout({ children }) {
                             <Shield className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <span className="font-bold text-lg tracking-tight block text-glow">LinguaNova</span>
+                            <span className="font-bold text-lg tracking-tight block text-glow">Lunavera Language</span>
                             <span className="text-[10px] uppercase font-bold tracking-widest text-purple-400">
                                 Admin Console
                             </span>

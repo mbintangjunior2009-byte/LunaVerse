@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#120018">
-        <meta name="description" content="LinguaNova – Master Languages Beautifully with AI-powered conversations, smart flashcards, and native content.">
+        <meta name="description" content="Lunavera Language – Master Languages Beautifully with AI-powered conversations, smart flashcards, and native content.">
 
-        <title inertia>{{ config('app.name', 'LinguaNova') }}</title>
+        <title inertia>{{ config('app.name', 'Lunavera Language') }}</title>
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 

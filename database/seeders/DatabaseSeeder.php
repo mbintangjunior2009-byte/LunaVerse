@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@linguanova.com'],
             [
-                'name' => 'Admin LinguaNova',
+                'name' => 'Admin Lunavera',
                 'password' => \Illuminate\Support\Facades\Hash::make('password123'),
                 'role' => 'admin',
                 'email_verified_at' => now(),

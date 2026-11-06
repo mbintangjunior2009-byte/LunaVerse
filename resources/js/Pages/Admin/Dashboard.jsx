@@ -90,7 +90,7 @@ export default function Dashboard({ metrics, recentUsers, systemInfo }) {
 
     return (
         <AdminLayout>
-            <Head title="Admin Dashboard - LinguaNova" />
+            <Head title="Admin Dashboard - Lunavera Language" />
 
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

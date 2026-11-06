@@ -7,7 +7,7 @@ import { Users, Trophy, Flame, MessageSquare, ArrowRight, Heart } from 'lucide-r
 export default function Community({ auth }) {
     return (
         <PublicLayout auth={auth}>
-            <Head title="Community - LinguaNova" />
+            <Head title="Community - Lunavera Language" />
             
             <section className="py-24 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">

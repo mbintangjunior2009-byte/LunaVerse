@@ -10,12 +10,13 @@ export default function Achievements() {
     const { t } = useTranslation();
     const languages = getAllLanguages();
 
-    // Achievement data sourced from locale keys so it translates dynamically
+    // Achievement data — defaults to locked with 0% completion for new users.
+    // Unlock status should be calculated from real progress data in the future.
     const achievements = [
-        { titleKey: 'achievements.firstWord',   descKey: 'achievements.firstWordDesc',   icon: '🌱', unlocked: true,  date: 'Jan 12' },
-        { titleKey: 'achievements.weekWarrior', descKey: 'achievements.weekWarriorDesc', icon: '🔥', unlocked: true,  date: 'Jan 19' },
-        { titleKey: 'achievements.chatterbox',  descKey: 'achievements.chatterboxDesc',  icon: '💬', unlocked: true,  date: 'Feb 03' },
-        { titleKey: 'achievements.kanjiMaster', descKey: 'achievements.kanjiMasterDesc', icon: '💮', unlocked: true,  date: 'Feb 14' },
+        { titleKey: 'achievements.firstWord',   descKey: 'achievements.firstWordDesc',   icon: '🌱', unlocked: false, date: null },
+        { titleKey: 'achievements.weekWarrior', descKey: 'achievements.weekWarriorDesc', icon: '🔥', unlocked: false, date: null },
+        { titleKey: 'achievements.chatterbox',  descKey: 'achievements.chatterboxDesc',  icon: '💬', unlocked: false, date: null },
+        { titleKey: 'achievements.kanjiMaster', descKey: 'achievements.kanjiMasterDesc', icon: '💮', unlocked: false, date: null },
         { titleKey: 'achievements.polyglot',    descKey: 'achievements.polyglotDesc',    icon: '🌍', unlocked: false, date: null },
         { titleKey: 'achievements.nightOwl',    descKey: 'achievements.nightOwlDesc',    icon: '🦉', unlocked: false, date: null },
     ];

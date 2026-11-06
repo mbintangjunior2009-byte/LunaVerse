@@ -17,7 +17,7 @@ import {
 
 export default function SettingsIndex({ settings }) {
     const { data, setData, post, processing, recentlySuccessful, errors } = useForm({
-        site_name: settings.site_name || 'LinguaNova',
+        site_name: settings.site_name || 'Lunavera Language',
         site_tagline: settings.site_tagline || '',
         contact_email: settings.contact_email || 'admin@linguanova.com',
         allow_registration: Boolean(settings.allow_registration),
@@ -47,7 +47,7 @@ export default function SettingsIndex({ settings }) {
 
     return (
         <AdminLayout>
-            <Head title="Site Settings & Features - LinguaNova Admin" />
+            <Head title="Site Settings & Features - Lunavera Language Admin" />
 
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

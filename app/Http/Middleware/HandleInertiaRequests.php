@@ -29,13 +29,26 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
-            // Current Laravel application locale — can be used server-side if needed.
-            // The actual UI language is driven client-side by i18next / localStorage.
+            // Real user progress stats — available on every authenticated page.
+            // Falls back to zero for brand-new accounts with no progress record.
+            'progress' => $user ? [
+                'xp'               => $user->progress?->xp ?? 0,
+                'level'            => $user->progress?->level ?? 1,
+                'streak'           => $user->progress?->streak ?? 0,
+                'completed_lessons' => $user->progress?->completed_lessons ?? 0,
+            ] : null,
+            // Today's pending events count — powers the notification banner on
+            // Dashboard and Calendar pages.
+            'todaysEventCount' => $user
+                ? $user->events()->whereDate('event_date', today())->where('is_completed', false)->count()
+                : 0,
             'locale' => app()->getLocale(),
         ];
     }

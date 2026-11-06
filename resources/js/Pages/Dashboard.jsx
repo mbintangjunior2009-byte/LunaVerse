@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Card, InteractiveCard } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
-import { Flame, Target, Trophy, Play } from 'lucide-react';
+import { Flame, Target, Trophy, Play, Bell, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getAllLanguages } from '@/data/languageConfig';
+import { usePage } from '@inertiajs/react';
 
 export default function Dashboard({ auth, backendProgress, languageProgresses }) {
     const { t } = useTranslation();
+    const { todaysEventCount } = usePage().props;
     const languages = getAllLanguages();
 
     const languagesWithProgress = languages.map((lang) => {
@@ -64,6 +66,29 @@ export default function Dashboard({ auth, backendProgress, languageProgresses })
                     {primaryLanguage.flag}
                 </div>
             </motion.div>
+
+            {/* Today's events notification banner */}
+            {todaysEventCount > 0 && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+                    className="mb-8 p-4 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-between gap-4"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-brand-500/20 flex items-center justify-center shrink-0">
+                            <Bell className="w-5 h-5 text-brand-300" />
+                        </div>
+                        <p className="text-sm text-gray-200">
+                            You have <span className="font-bold text-brand-300">{todaysEventCount}</span> study{' '}
+                            {todaysEventCount === 1 ? 'activity' : 'activities'} scheduled for today!
+                        </p>
+                    </div>
+                    <Link href="/calendar">
+                        <Button variant="primary" size="sm" className="gap-1 whitespace-nowrap">
+                            View Calendar
+                        </Button>
+                    </Link>
+                </motion.div>
+            )}
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

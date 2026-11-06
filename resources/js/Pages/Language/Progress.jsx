@@ -11,19 +11,18 @@ import { Card } from '@/Components/ui/Card';
 import { TrendingUp, Clock, Target, Flame, Award, BookOpen, Headphones, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const maxXp = 200;
-
 const calculateStats = (progress, totalLessons) => {
     const completedLessons    = progress.completed.length;
     const overallProgress     = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
     const vocabularyLearned   = completedLessons * 15;
     const kanjiLearned        = completedLessons * 5;
-    const grammarCompletion   = Math.min(100, overallProgress + 10);
-    const listeningCompletion = Math.min(100, overallProgress - 5);
-    const readingCompletion   = Math.min(100, overallProgress - 10);
+    // Skill completions scale with overall progress — clamped to 0-100, never negative
+    const grammarCompletion   = Math.min(100, Math.max(0, overallProgress));
+    const listeningCompletion = Math.min(100, Math.max(0, overallProgress));
+    const readingCompletion   = Math.min(100, Math.max(0, overallProgress));
     const studyTime           = completedLessons * 45;
-    const accuracy            = 92 + Math.floor(Math.random() * 6);
-    const currentStreak       = Math.min(30, completedLessons + 5);
+    const accuracy            = completedLessons > 0 ? 92 : 0; // 0% until user has activity
+    const currentStreak       = 0; // driven by backend, not inflated
     let estimatedLevel        = 'beginner';
     if (overallProgress >= 80) estimatedLevel = 'advanced';
     else if (overallProgress >= 50) estimatedLevel = 'intermediate';
@@ -40,16 +39,18 @@ export default function LanguageProgress({ languageId }) {
     const totalLessons = curriculum.reduce((acc, cat) => acc + cat.lessons.length, 0);
     const stats        = calculateStats(progress, totalLessons);
 
+    // Weekly XP — all zeros for new users with no activity.
+    // In the future this should come from a backend query of daily XP logs.
     const weekly = [
-        { day: t('days.mon'), xp: 120 },
-        { day: t('days.tue'), xp: 80  },
-        { day: t('days.wed'), xp: 150 },
-        { day: t('days.thu'), xp: 95  },
-        { day: t('days.fri'), xp: 200 },
-        { day: t('days.sat'), xp: 60  },
-        { day: t('days.sun'), xp: 140 },
+        { day: t('days.mon'), xp: 0 },
+        { day: t('days.tue'), xp: 0 },
+        { day: t('days.wed'), xp: 0 },
+        { day: t('days.thu'), xp: 0 },
+        { day: t('days.fri'), xp: 0 },
+        { day: t('days.sat'), xp: 0 },
+        { day: t('days.sun'), xp: 0 },
     ];
-    const weeklyMax = Math.max(...weekly.map((d) => d.xp));
+    const weeklyMax = Math.max(...weekly.map((d) => d.xp), 1); // min 1 to avoid divide-by-zero
 
     const formatTime = (minutes) => {
         if (minutes < 60) return `${minutes}${t('common.minutes')}`;
@@ -59,7 +60,7 @@ export default function LanguageProgress({ languageId }) {
     };
 
     const skillRows = [
-        { label: t('sections.vocabulary'),  value: Math.min(100, stats.overallProgress + 15), color: 'brand' },
+        { label: t('sections.vocabulary'),  value: stats.overallProgress,                       color: 'brand' },
         { label: t('stats.grammar'),         value: stats.grammarCompletion,                   color: 'blue'  },
         { label: t('stats.listening'),       value: stats.listeningCompletion,                  color: 'orange'},
         { label: t('stats.reading'),         value: stats.readingCompletion,                    color: 'emerald'},

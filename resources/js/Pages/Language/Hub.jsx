@@ -71,7 +71,7 @@ export default function LanguageHub({ languageId }) {
                         <div className="flex items-center gap-2">
                             <Flame className="w-5 h-5 text-orange-300" />
                             <span className="text-gray-300">
-                                {t('language.streakLabel')} <span className="text-white font-bold">{t('language.streakValue', { count: 5 })}</span>
+                                {t('language.streakLabel')} <span className="text-white font-bold">{t('language.streakValue', { count: 0 })}</span>
                             </span>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ export default function LanguageHub({ languageId }) {
                         <TrendingUp className="w-3.5 h-3.5 text-emerald-300" /> {t('stats.currentStreak')}
                     </p>
                     <p className="text-3xl font-bold text-orange-300">
-                        5<span className="text-lg text-gray-500"> {t('common.days')}</span>
+                        0<span className="text-lg text-gray-500"> {t('common.days')}</span>
                     </p>
                 </Card>
             </div>
