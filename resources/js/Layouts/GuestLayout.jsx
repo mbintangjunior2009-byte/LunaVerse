@@ -20,7 +20,7 @@ export default function GuestLayout({ children }) {
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-300 flex items-center justify-center shadow-[0_0_15px_rgba(185,95,255,0.5)] group-hover:shadow-[0_0_25px_rgba(185,95,255,0.7)] transition-all">
                             <span className="font-bold text-xl text-white">L</span>
                         </div>
-                        <span className="font-bold text-2xl tracking-tight text-glow">LinguaNova</span>
+                        <span className="font-bold text-2xl tracking-tight text-glow">Lunavera Language</span>
                     </Link>
 
                     <Card className="w-full">

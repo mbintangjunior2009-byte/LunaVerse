@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -15,21 +16,29 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/features', function () {
+    return Inertia::render('Features');
+})->name('features');
+
+Route::get('/languages-info', function () {
+    return Inertia::render('PublicLanguages');
+})->name('public.languages');
+
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('pricing');
+
+Route::get('/community', function () {
+    return Inertia::render('Community');
+})->name('community');
+
 Route::get('/languages', function () {
     if (Auth::check()) {
         return Inertia::render('Dashboard/Languages');
     }
 
-    return Inertia::render('Public/Languages');
+    return Inertia::render('PublicLanguages');
 })->name('languages');
-
-Route::get('/pricing', function () {
-    return Inertia::render('Public/Pricing');
-})->name('pricing');
-
-Route::get('/community', function () {
-    return Inertia::render('Public/Community');
-})->name('community');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
@@ -51,9 +60,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Progress');
     })->name('progress');
 
-    Route::get('/calendar', function () {
-        return Inertia::render('Dashboard/Calendar');
-    })->name('calendar');
+    Route::get('/calendar', [\App\Http\Controllers\CalendarController::class, 'index'])->name('calendar');
+    Route::post('/calendar/events', [\App\Http\Controllers\CalendarController::class, 'store'])->name('calendar.events.store');
+    Route::put('/calendar/events/{event}', [\App\Http\Controllers\CalendarController::class, 'update'])->name('calendar.events.update');
+    Route::delete('/calendar/events/{event}', [\App\Http\Controllers\CalendarController::class, 'destroy'])->name('calendar.events.destroy');
+    Route::patch('/calendar/events/{event}/toggle', [\App\Http\Controllers\CalendarController::class, 'toggle'])->name('calendar.events.toggle');
 
     Route::get('/settings', function () {
         return Inertia::render('Dashboard/Settings');
@@ -65,75 +76,105 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dynamic Language Routes - Works for all supported languages
     $allowedLanguages = ['japanese', 'chinese', 'korean', 'english', 'spanish'];
-    
-    Route::prefix('language/{lang}')->group(function () use ($allowedLanguages) {
-        Route::get('/', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+
+    Route::prefix('languages/{language}')->group(function () use ($allowedLanguages) {
+        Route::get('/', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Hub', [
                 'languageId' => $slug,
             ]);
-        })->name('language.hub');
+        })->name('languages.show');
 
-        Route::get('/study', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/study', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Study', [
                 'languageId' => $slug,
             ]);
-        })->name('language.study');
+        })->name('languages.study');
 
-        Route::get('/study/{lesson}', function (string $lang, string $lesson) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        // Study category overview — must be defined BEFORE the generic {lesson} wildcard
+        $studyCategories = ['hiragana', 'katakana', 'kanji', 'grammar', 'vocabulary', 'listening'];
+        Route::get('/study/{category}', function (string $language, string $category) use ($allowedLanguages, $studyCategories) {
+            $slug = strtolower($language);
+            abort_unless(in_array($slug, $allowedLanguages, true), 404);
+            // If the segment matches a known study category, show the category overview
+            if (in_array($category, $studyCategories, true)) {
+                return Inertia::render('Language/StudyCategory', [
+                    'languageId' => $slug,
+                    'categoryId' => $category,
+                ]);
+            }
+            // Otherwise treat it as a lesson ID and render the lesson viewer
+            return Inertia::render('Language/Lesson', [
+                'languageId' => $slug,
+                'lessonId'   => $category,
+            ]);
+        })->name('languages.study.show');
+
+        // Explicit lesson route keeps working (e.g. links generated with the full lesson id)
+        Route::get('/study/{category}/{lesson}', function (string $language, string $category, string $lesson) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Lesson', [
                 'languageId' => $slug,
-                'lessonId' => $lesson,
+                'lessonId'   => $lesson,
             ]);
-        })->name('language.lesson');
+        })->name('languages.study.lesson');
 
-        Route::get('/practice', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/practice', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Language/Practice', [
-                'languageId' => $slug,
-            ]);
-        })->name('language.practice');
+            // Delegate to PracticeController so unlock/score state is passed to the view
+            return app(\App\Http\Controllers\PracticeController::class)->index($slug);
+        })->name('languages.practice');
 
-        // Hiragana quiz route - must be defined BEFORE the generic {quiz} route
-        Route::get('/practice/hiragana', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        // Hiragana quiz route - must be defined BEFORE the generic {category} route
+        Route::get('/practice/hiragana', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/HiraganaQuiz', [
                 'languageId' => $slug,
                 'quizId' => 'basic-hiragana',
             ]);
-        })->name('language.hiragana');
+        })->name('languages.practice.hiragana');
 
-        // Generic quiz route for other quizzes
-        Route::get('/practice/{quiz}', function (string $lang, string $quiz) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        // Generic practice category quiz (kanji, vocabulary, grammar, listening, …)
+        Route::get('/practice/{category}', function (string $language, string $category) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
-            return Inertia::render('Dashboard/Japanese/Quiz', [
-                'quizId' => $quiz,
+            $validCategories = ['katakana', 'kanji', 'vocabulary', 'grammar', 'listening'];
+            abort_unless(in_array($category, $validCategories, true), 404);
+            return Inertia::render('Language/CategoryQuiz', [
+                'languageId' => $slug,
+                'category'   => $category,
             ]);
-        })->name('language.quiz');
+        })->name('languages.practice.show');
 
-        Route::get('/progress', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/vocabulary', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
+            abort_unless(in_array($slug, $allowedLanguages, true), 404);
+            return Inertia::render('Language/Vocabulary', [
+                'languageId' => $slug,
+            ]);
+        })->name('languages.vocabulary');
+
+        Route::get('/progress', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Progress', [
                 'languageId' => $slug,
             ]);
-        })->name('language.progress');
+        })->name('languages.progress');
 
-        Route::get('/achievements', function (string $lang) use ($allowedLanguages) {
-            $slug = strtolower($lang);
+        Route::get('/achievements', function (string $language) use ($allowedLanguages) {
+            $slug = strtolower($language);
             abort_unless(in_array($slug, $allowedLanguages, true), 404);
             return Inertia::render('Language/Achievements', [
                 'languageId' => $slug,
             ]);
-        })->name('language.achievements');
+        })->name('languages.achievements');
     });
 
 
@@ -146,6 +187,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Admin Panel Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.destroy');
+    Route::get('/settings', [AdminController::class, 'settings'])->name('settings.index');
+    Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
 });
 
 require __DIR__.'/auth.php';

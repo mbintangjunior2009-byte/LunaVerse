@@ -1,5 +1,5 @@
 /**
- * Japanese study curriculum — authentic teaching content for LinguaNova.
+ * Japanese study curriculum — authentic teaching content for Lunavera Language.
  */
 
 const hiraganaChart = {

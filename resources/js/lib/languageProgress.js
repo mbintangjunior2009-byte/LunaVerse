@@ -112,18 +112,36 @@ export function getTotalXP() {
 }
 
 /**
- * Reset progress for a specific language (for testing purposes)
+ * Clear ALL language progress data from localStorage.
+ * Called when the authenticated user changes (login/logout/switch)
+ * to prevent stale progress from a previous user bleeding into
+ * the new user's view.
  */
-export function resetLanguageProgress(languageId) {
+export function clearAllLanguageProgress() {
     if (typeof window === 'undefined') return;
-    window.localStorage.removeItem(`${STORAGE_KEY_PREFIX}${languageId}.progress`);
-    // Also remove partial progress
     const keys = Object.keys(window.localStorage);
-    keys.forEach(key => {
-        if (key.startsWith(`${STORAGE_KEY_PREFIX}${languageId}.partial.`)) {
+    keys.forEach((key) => {
+        if (key.startsWith(STORAGE_KEY_PREFIX)) {
             window.localStorage.removeItem(key);
         }
     });
+}
+
+/**
+ * Store the ID of the last user whose progress is in localStorage.
+ * Used to detect user switches and clear stale data.
+ */
+export function setLastProgressUserId(userId) {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(`${STORAGE_KEY_PREFIX}_last_user_id`, String(userId));
+}
+
+/**
+ * Get the last user ID whose progress was stored, or null if none.
+ */
+export function getLastProgressUserId() {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem(`${STORAGE_KEY_PREFIX}_last_user_id`);
 }
 
 /**

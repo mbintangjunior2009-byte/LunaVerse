@@ -23,7 +23,7 @@ const calculateStats = (progress) => {
     const totalLessons = japaneseCurriculum.reduce((acc, cat) => acc + cat.lessons.length, 0);
     const completedLessons = progress.completed.length;
     const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-    
+
     // Simulated stats based on progress
     const vocabularyLearned = completedLessons * 15;
     const kanjiLearned = completedLessons * 5;
@@ -33,7 +33,7 @@ const calculateStats = (progress) => {
     const studyTime = completedLessons * 45; // minutes
     const accuracy = 92 + Math.floor(Math.random() * 6);
     const currentStreak = Math.min(30, completedLessons + 5);
-    
+
     // JLPT Level estimation
     let estimatedJLPT = 'N5';
     if (overallProgress >= 80) estimatedJLPT = 'N4';
@@ -41,7 +41,7 @@ const calculateStats = (progress) => {
     else if (overallProgress >= 40) estimatedJLPT = 'N5';
     else if (overallProgress >= 20) estimatedJLPT = 'N5 初级';
     else estimatedJLPT = '入门';
-    
+
     return {
         overallProgress,
         completedLessons,
@@ -62,7 +62,7 @@ const calculateStats = (progress) => {
 export default function Progress() {
     const progress = loadJapaneseProgress();
     const stats = calculateStats(progress);
-    
+
     const formatTime = (minutes) => {
         if (minutes < 60) return `${minutes}m`;
         const hours = Math.floor(minutes / 60);
@@ -79,7 +79,7 @@ export default function Progress() {
                 <span className="text-gray-600">›</span>
                 <Link href="/languages" className="hover:text-brand-300 transition-colors">Languages</Link>
                 <span className="text-gray-600">›</span>
-                <Link href="/language/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
+                <Link href="/languages/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
                 <span className="text-gray-600">›</span>
                 <span className="text-brand-300 font-medium">Progress</span>
             </nav>
@@ -315,7 +315,7 @@ export default function Progress() {
                 <Card className="p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold">Skill Breakdown</h2>
-                        <Link href="/language/japanese/study" className="text-sm text-brand-300 hover:underline">
+                        <Link href="/languages/japanese/study" className="text-sm text-brand-300 hover:underline">
                             Resume study
                         </Link>
                     </div>

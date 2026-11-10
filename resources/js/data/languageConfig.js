@@ -47,13 +47,10 @@ export const languageConfig = {
                 icon: 'あ', 
                 description: 'Japanese phonetic script',
                 lessons: [
-                    { id: 'basic-hiragana', title: 'Basic Hiragana', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'dakuten', title: 'Dakuten', difficulty: 'Beginner', time: '10 min' },
-                    { id: 'handakuten', title: 'Handakuten', difficulty: 'Beginner', time: '10 min' },
-                    { id: 'yoon', title: 'Combination Kana (Yoon)', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'small-tsu', title: 'Small Tsu', difficulty: 'Beginner', time: '10 min' },
-                    { id: 'hiragana-reading', title: 'Reading Practice', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'hiragana-writing', title: 'Writing Guide', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'hiragana',   title: 'Basic Hiragana',       difficulty: 'Beginner', time: '45 min' },
+                    { id: 'dakuten',    title: 'Dakuten',               difficulty: 'Beginner', time: '25 min' },
+                    { id: 'handakuten', title: 'Handakuten',            difficulty: 'Beginner', time: '20 min' },
+                    { id: 'yoon',       title: 'Combination Kana (Yoon)', difficulty: 'Beginner', time: '30 min' },
                 ]
             },
             { 
@@ -62,27 +59,17 @@ export const languageConfig = {
                 icon: 'ア', 
                 description: 'Script for foreign words',
                 lessons: [
-                    { id: 'basic-katakana', title: 'Basic Katakana', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'katakana-dakuten', title: 'Dakuten', difficulty: 'Beginner', time: '10 min' },
-                    { id: 'katakana-yoon', title: 'Combination Kana', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'loan-words', title: 'Loan Words', difficulty: 'Intermediate', time: '20 min' },
-                    { id: 'katakana-reading', title: 'Reading Practice', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'katakana-writing', title: 'Writing Guide', difficulty: 'Beginner', time: '30 min' },
+                    { id: 'katakana', title: 'Katakana Basics', difficulty: 'Beginner', time: '45 min' },
                 ]
             },
             { 
                 id: 'kanji', 
                 name: 'Kanji', 
-                icon: '�', 
+                icon: '漢', 
                 description: 'Chinese characters',
                 lessons: [
-                    { id: 'kanji-level-1', title: 'Level 1', difficulty: 'Beginner', time: '30 min' },
-                    { id: 'kanji-level-2', title: 'Level 2', difficulty: 'Beginner', time: '30 min' },
-                    { id: 'kanji-level-3', title: 'Level 3', difficulty: 'Intermediate', time: '30 min' },
-                    { id: 'kanji-level-4', title: 'Level 4', difficulty: 'Intermediate', time: '30 min' },
-                    { id: 'kanji-level-5', title: 'Level 5', difficulty: 'Advanced', time: '30 min' },
-                    { id: 'radicals', title: 'Common Radicals', difficulty: 'Intermediate', time: '20 min' },
-                    { id: 'stroke-order', title: 'Stroke Order', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'basic-kanji',    title: 'Basic Kanji (N5)',  difficulty: 'Beginner',      time: '50 min' },
+                    { id: 'jlpt-n4-kanji',  title: 'JLPT N4 Kanji',    difficulty: 'Intermediate',  time: '60 min' },
                 ]
             },
             { 
@@ -91,32 +78,20 @@ export const languageConfig = {
                 icon: '📝', 
                 description: 'Sentence structure and patterns',
                 lessons: [
-                    { id: 'particles', title: 'Particles', difficulty: 'Beginner', time: '25 min' },
-                    { id: 'sentence-structure', title: 'Sentence Structure', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'verb-forms', title: 'Verb Forms', difficulty: 'Intermediate', time: '30 min' },
-                    { id: 'adjectives', title: 'Adjectives', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'question-forms', title: 'Question Forms', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'casual-form', title: 'Casual Form', difficulty: 'Intermediate', time: '25 min' },
-                    { id: 'formal-form', title: 'Formal Form', difficulty: 'Intermediate', time: '25 min' },
+                    { id: 'basic-grammar',    title: 'Basic Grammar',     difficulty: 'Beginner',     time: '50 min' },
+                    { id: 'jlpt-n4-grammar',  title: 'JLPT N4 Grammar',  difficulty: 'Intermediate', time: '60 min' },
                 ]
             },
             { 
                 id: 'vocabulary', 
                 name: 'Vocabulary', 
-                icon: '�', 
+                icon: '語', 
                 description: 'Essential words and phrases',
                 lessons: [
-                    { id: 'vocab-n5', title: 'N5 Vocabulary', difficulty: 'Beginner', time: '40 min' },
-                    { id: 'vocab-n4', title: 'N4 Vocabulary', difficulty: 'Intermediate', time: '40 min' },
-                    { id: 'vocab-n3', title: 'N3 Vocabulary', difficulty: 'Advanced', time: '40 min' },
-                    { id: 'vocab-n2', title: 'N2 Vocabulary', difficulty: 'Advanced', time: '40 min' },
-                    { id: 'vocab-n1', title: 'N1 Vocabulary', difficulty: 'Advanced', time: '40 min' },
-                    { id: 'numbers', title: 'Numbers', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'time', title: 'Time', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'food', title: 'Food', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'travel', title: 'Travel', difficulty: 'Intermediate', time: '20 min' },
-                    { id: 'school', title: 'School', difficulty: 'Beginner', time: '20 min' },
-                    { id: 'daily-life', title: 'Daily Life', difficulty: 'Beginner', time: '25 min' },
+                    { id: 'greetings',          title: 'Greetings',          difficulty: 'Beginner',      time: '30 min' },
+                    { id: 'numbers',            title: 'Numbers',            difficulty: 'Beginner',      time: '35 min' },
+                    { id: 'basic-vocabulary',   title: 'Basic Vocabulary',   difficulty: 'Beginner',      time: '40 min' },
+                    { id: 'jlpt-n4-vocabulary', title: 'JLPT N4 Vocabulary', difficulty: 'Intermediate',  time: '60 min' },
                 ]
             },
             { 
@@ -125,11 +100,8 @@ export const languageConfig = {
                 icon: '🎧', 
                 description: 'Audio comprehension',
                 lessons: [
-                    { id: 'alphabet-audio', title: 'Alphabet Audio', difficulty: 'Beginner', time: '10 min' },
-                    { id: 'vocab-audio', title: 'Vocabulary Audio', difficulty: 'Beginner', time: '15 min' },
-                    { id: 'sentence-audio', title: 'Sentence Audio', difficulty: 'Intermediate', time: '20 min' },
-                    { id: 'conversation-audio', title: 'Conversation Audio', difficulty: 'Intermediate', time: '25 min' },
-                    { id: 'jlpt-listening', title: 'JLPT Listening', difficulty: 'Advanced', time: '30 min' },
+                    { id: 'listening-practice', title: 'Listening Practice', difficulty: 'Intermediate', time: '45 min' },
+                    { id: 'listening',          title: 'Advanced Listening', difficulty: 'Advanced',     time: '55 min' },
                 ]
             },
         ],

@@ -9,21 +9,21 @@ import { loadLanguageProgress, getTotalLessonCount } from '@/lib/languageProgres
 
 export default function Profile({ auth }) {
     const languages = getAllLanguages();
-    
+
     // Calculate progress for each language
     const languagesWithProgress = languages.map((lang) => {
         const progress = loadLanguageProgress(lang.id);
         const totalLessons = getTotalLessonCount(lang.id);
         const completedLessons = progress.completed.length;
-        const progressPercent = totalLessons > 0 
-            ? Math.round((completedLessons / totalLessons) * 100) 
+        const progressPercent = totalLessons > 0
+            ? Math.round((completedLessons / totalLessons) * 100)
             : 0;
-        
+
         // Calculate level based on progress
         const levelIndex = Math.floor(progressPercent / 33.33);
         const levels = ['Beginner', 'Intermediate', 'Advanced'];
         const currentLevel = levels[Math.min(levelIndex, 2)];
-        
+
         return {
             ...lang,
             progress: progressPercent,
@@ -111,7 +111,7 @@ export default function Profile({ auth }) {
                         <h3 className="font-bold mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-brand-300" /> Languages</h3>
                         <div className="space-y-3">
                             {languagesWithProgress.map((lang) => (
-                                <Link key={lang.id} href={`/language/${lang.id}`} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <Link key={lang.id} href={`/languages/${lang.id}`} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                                     <span className="text-2xl">{lang.flag}</span>
                                     <div className="flex-1">
                                         <h4 className="font-bold text-sm">{lang.name}</h4>

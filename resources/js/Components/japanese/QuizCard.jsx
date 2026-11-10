@@ -76,7 +76,7 @@ export default function QuizCard({ quiz, completed, bestScore, onPlay }) {
     }
 
     return (
-        <Link href={`/language/japanese/practice/${quiz.id}`} className="block h-full">
+        <Link href={`/languages/japanese/practice/${quiz.id}`} className="block h-full">
             {cardBody}
         </Link>
     );

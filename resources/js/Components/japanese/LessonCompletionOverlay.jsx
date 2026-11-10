@@ -71,7 +71,7 @@ export default function LessonCompletionOverlay({
 
                         <div className="flex flex-col gap-3">
                             {nextLesson && (
-                                <Link href={`/language/japanese/study/${nextLesson.id}`}>
+                                <Link href={`/languages/japanese/study/${nextLesson.id}`}>
                                     <Button variant="primary" className="w-full gap-2">
                                         Continue to {nextLesson.title}
                                         <ChevronRight className="w-4 h-4" />
@@ -81,7 +81,7 @@ export default function LessonCompletionOverlay({
                             <Button type="button" variant="outline" className="w-full" onClick={onClose}>
                                 Stay on this lesson
                             </Button>
-                            <Link href="/language/japanese/study">
+                            <Link href="/languages/japanese/study">
                                 <Button variant="glass" className="w-full">Back to Study</Button>
                             </Link>
                         </div>

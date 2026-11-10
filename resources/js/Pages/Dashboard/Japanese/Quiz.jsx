@@ -44,7 +44,7 @@ export default function Quiz({ quizId }) {
                 <Card className="p-8 text-center">
                     <h1 className="text-2xl font-bold mb-2">Quiz not found</h1>
                     <p className="text-gray-400 mb-6">This practice quiz does not exist.</p>
-                    <Button variant="primary" onClick={() => router.visit('/language/japanese/practice')}>
+                    <Button variant="primary" onClick={() => router.visit('/languages/japanese/practice')}>
                         Back to Practice
                     </Button>
                 </Card>
@@ -104,7 +104,7 @@ export default function Quiz({ quizId }) {
 
                     <div className="flex flex-col sm:flex-row gap-3">
                         <Button variant="primary" onClick={resetQuiz}>Start Quiz</Button>
-                        <Link href="/language/japanese/practice">
+                        <Link href="/languages/japanese/practice">
                             <Button variant="outline" className="w-full sm:w-auto">Back to Practice</Button>
                         </Link>
                     </div>

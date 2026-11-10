@@ -1,5 +1,5 @@
 /**
- * Japanese practice quizzes — authentic question banks for LinguaNova.
+ * Japanese practice quizzes — authentic question banks for Lunavera Language.
  */
 
 function q(prompt, options, answer, meta = {}) {

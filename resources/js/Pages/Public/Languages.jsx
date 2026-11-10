@@ -14,7 +14,7 @@ export default function Languages({ auth }) {
 
     const openLanguage = (slug) => {
         if (auth?.user) {
-            router.visit(`/language/${slug}`);
+            router.visit(`/languages/${slug}`);
             return;
         }
         router.visit('/login');
@@ -35,7 +35,7 @@ export default function Languages({ auth }) {
                             <div className="text-6xl mb-6">{lang.flag}</div>
                             <h3 className="text-2xl font-bold mb-2">{lang.name}</h3>
                             <p className="text-gray-400 mb-6 flex-grow">{lang.desc}</p>
-                            
+
                             <div className="flex items-center justify-between pt-4 border-t border-white/5 text-sm">
                                 <span className="text-brand-300 bg-brand-500/10 px-3 py-1 rounded-full">{lang.diff}</span>
                                 <span className="text-gray-400">~{lang.hours}</span>

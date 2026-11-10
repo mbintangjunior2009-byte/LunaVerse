@@ -8,8 +8,8 @@ export default function JapaneseStudyBreadcrumb({
 }) {
     const sectionLabel = section === 'practice' ? 'Practice' : 'Study';
     const sectionHref = section === 'practice'
-        ? '/language/japanese/practice'
-        : '/language/japanese/study';
+        ? '/languages/japanese/practice'
+        : '/languages/japanese/study';
 
     return (
         <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-400">
@@ -17,7 +17,7 @@ export default function JapaneseStudyBreadcrumb({
             <span className="text-gray-600">›</span>
             <Link href="/languages" className="hover:text-brand-300 transition-colors">Languages</Link>
             <span className="text-gray-600">›</span>
-            <Link href="/language/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
+            <Link href="/languages/japanese" className="hover:text-brand-300 transition-colors">Japanese</Link>
             <span className="text-gray-600">›</span>
             {lessonTitle ? (
                 <>
